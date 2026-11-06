@@ -12,6 +12,7 @@
 #include <base/color.h>
 #include <base/dbg.h>
 #include <base/fs.h>
+#include <base/io.h>
 #include <base/log.h>
 #include <base/str.h>
 #include <base/time.h>
@@ -1119,8 +1120,70 @@ bool CMenus::CanDisplayWarning() const
 	return m_Popup == POPUP_NONE;
 }
 
+
+// bestclient: one-time offer to move BestClient settings over to RequiemClient.
+static bool s_ConfigMigrationChecked = false;
+
+void CMenus::CheckConfigMigration()
+{
+	if(s_ConfigMigrationChecked)
+		return;
+	s_ConfigMigrationChecked = true;
+	if(Client()->State() != IClient::STATE_OFFLINE)
+		return;
+	if(!Storage()->FileExists("settings_BestClient.cfg", IStorage::TYPE_SAVE))
+		return;
+	if(Storage()->FileExists("RequiemClient/config_migrated", IStorage::TYPE_SAVE))
+		return;
+	if(m_Popup != POPUP_NONE)
+	{
+		s_ConfigMigrationChecked = false;
+		return;
+	}
+	PopupConfirm(Localize("Config migration"),
+		Localize("BestClient settings found. Copy them to RequiemClient? Current RequiemClient settings will be replaced."),
+		Localize("Migrate"), Localize("Later"),
+		&CMenus::PopupConfirmConfigMigration);
+}
+
+void CMenus::PopupConfirmConfigMigration()
+{
+	auto CopyFile = [this](const char *pFrom, const char *pTo) {
+		void *pData = nullptr;
+		unsigned Size = 0;
+		if(!Storage()->ReadFile(pFrom, IStorage::TYPE_SAVE, &pData, &Size))
+			return false;
+		IOHANDLE File = Storage()->OpenFile(pTo, IOFLAG_WRITE, IStorage::TYPE_SAVE);
+		bool Ok = false;
+		if(File)
+		{
+			Ok = io_write(File, pData, Size) == Size;
+			io_close(File);
+		}
+		free(pData);
+		return Ok;
+	};
+
+	Storage()->CreateFolder("RequiemClient", IStorage::TYPE_SAVE);
+	CopyFile("settings_BestClient.cfg", "settings_RequiemClient.cfg");
+	CopyFile("BestClient/hud_layout.cfg", "RequiemClient/hud_layout.cfg");
+	CopyFile("BestClient/ui_theme.cfg", "RequiemClient/ui_theme.cfg");
+
+	IOHANDLE Marker = Storage()->OpenFile("RequiemClient/config_migrated", IOFLAG_WRITE, IStorage::TYPE_SAVE);
+	if(Marker)
+	{
+		io_write(Marker, "migrated", 8);
+		io_close(Marker);
+	}
+
+	PopupMessage(Localize("Config migration"),
+		Localize("Settings copied. Restart the client to apply them."),
+		Localize("OK"));
+}
+
 void CMenus::Render()
 {
+	CheckConfigMigration();
 	Ui()->MapScreen();
 	Ui()->SetMouseSlow(false);
 	// bestclient

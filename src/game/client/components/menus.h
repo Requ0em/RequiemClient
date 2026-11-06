@@ -200,6 +200,8 @@ protected:
 	void RemoveCustomAssetFromList(int Tab, const char *pName);
 	void MarkCustomAssetsDeletable(int Tab);
 	void PopupConfirmDeleteAsset();
+	void CheckConfigMigration(); // bestclient
+	void PopupConfirmConfigMigration(); // bestclient
 
 	std::array<std::set<std::string>, NUM_ASSET_FAVORITE_TABS> m_aAssetFavorites;
 	char m_aDeleteAssetName[50] = "";
