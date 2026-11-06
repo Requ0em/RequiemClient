@@ -4179,7 +4179,7 @@ function(regex_inverted VAR)
   set(${VAR} ${RESULT} PARENT_SCOPE)
 endfunction()
 
-set(CPACK_PACKAGE_NAME "bestclient") # bestclient
+set(CPACK_PACKAGE_NAME "requiemclient") # bestclient
 set(CPACK_GENERATOR TGZ TXZ)
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 if(TARGET_OS STREQUAL "mac")
