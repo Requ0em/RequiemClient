@@ -396,8 +396,8 @@ inline ColorRGBA UiBlockColor()
 		return ColorRGBA(C.r, C.g, C.b, Alpha * C.a);
 	}
 	if(!IsCustomUiColor())
-		return ColorRGBA(0.0f, 0.0f, 0.0f, 0.25f);
-	return ColorRGBA(0.0f, 0.0f, 0.0f, Alpha);
+		return ColorRGBA(0.30f, 0.03f, 0.05f, 0.55f);
+	return ColorRGBA(0.30f, 0.03f, 0.05f, Alpha);
 }
 
 inline void DrawUiBlock(const CUIRect *pRect, int Corners = IGraphics::CORNER_ALL, float Rounding = 10.0f)
@@ -416,7 +416,7 @@ inline void DrawUiBlock(const CUIRect *pRect, int Corners = IGraphics::CORNER_AL
 inline ColorRGBA UiMainPanel(ColorRGBA Base, bool AccentState = false)
 {
 	if(!IsCustomUiColor())
-		return Base;
+		return ColorRGBA(Base.r, Base.g * 0.30f, Base.b * 0.32f, Base.a);
 	const float OpacityScale = ThemePanelOpacity() / 50.0f;
 	const bool UseAccent = PanelAccent();
 	if(IsCustomUiMainPanel())
@@ -452,7 +452,7 @@ inline void DrawUiMainPanel(const CUIRect *pRect, ColorRGBA Base, bool AccentSta
 inline ColorRGBA UiNavTab(ColorRGBA Base, bool AccentState = false)
 {
 	if(!IsCustomUiColor())
-		return Base;
+		return ColorRGBA(Base.r, Base.g * 0.30f, Base.b * 0.32f, Base.a);
 	const float OpacityScale = ThemeNavOpacity() / 50.0f;
 	const bool UseAccent = NavAccent();
 	if(IsCustomUiNavTab())

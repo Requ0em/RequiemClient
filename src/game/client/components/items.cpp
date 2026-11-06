@@ -361,10 +361,6 @@ void CItems::RenderLaser(const CLaserData *pCurrent, bool IsPredicted)
 void CItems::RenderLaser(vec2 From, vec2 Pos, ColorRGBA OuterColor, ColorRGBA InnerColor, float TicksBody, float TicksHead, int Type) const
 {
 	float Len = distance(Pos, From);
-	// bestclient
-	if(GameClient()->m_WeaponVfx.RenderWeaponLaser(From, Pos, OuterColor, InnerColor, TicksBody, TicksHead, Type))
-		return;
-	// bestclient
 
 	if(Len > 0)
 	{

@@ -20,7 +20,6 @@
 #include <game/client/animstate.h>
 #include <game/client/components/bestclient/bestclient.h> // bestclient
 #include <game/client/components/bestclient/demo_tee_editor.h> // bestclient
-#include <game/client/components/bestclient/jelly_tee.h> // bestclient
 #include <game/client/components/controls.h>
 #include <game/client/components/effects.h>
 #include <game/client/components/flow.h>
@@ -32,7 +31,6 @@
 #include <game/mapitems.h>
 
 // TClient
-#include <game/client/components/tclient/rainbow.h>
 #include <game/client/prediction/entities/character.h>
 
 static float CalculateHandAngle(vec2 Dir, float AngleOffset)
@@ -94,8 +92,7 @@ void CPlayers::RenderHand6(const CTeeRenderInfo *pInfo, vec2 HandPos, float Hand
 {
 	const CSkin::CSkinTextures *pSkinTextures = pInfo->m_CustomColoredSkin ? &pInfo->m_ColorableRenderSkin : &pInfo->m_OriginalRenderSkin;
 
-	if(!g_Config.m_TcRainbowTees) // TClient
-		Graphics()->SetColor(pInfo->m_ColorBody.WithAlpha(Alpha));
+	Graphics()->SetColor(pInfo->m_ColorBody.WithAlpha(Alpha));
 	Graphics()->QuadsSetRotation(HandAngle);
 	Graphics()->TextureSet(pSkinTextures->m_HandsOutline);
 	// bestclient
@@ -596,14 +593,6 @@ void CPlayers::RenderHook(
 		return;
 	// bestclient
 
-	// bestclient
-	if(GameClient()->m_HookRope.RenderRope(ClientId, Pos, HookPos, Player.m_HookState, Alpha))
-	{
-		RenderHand(&RenderInfo, Position, normalize(HookPos - Pos), -pi / 2, vec2(20, 0) * (RenderInfo.m_Size / 64.0f), Alpha); // bestclient
-		return;
-	}
-	// bestclient
-
 	float d = distance(Pos, HookPos);
 	vec2 Dir = normalize(Pos - HookPos);
 
@@ -612,11 +601,6 @@ void CPlayers::RenderHook(
 	// render head
 	int QuadOffset = NUM_WEAPONS * 2 + 2;
 	Graphics()->SetColor(1.0f, 1.0f, 1.0f, Alpha);
-
-	// TClient
-	bool DontOthers = !g_Config.m_TcRainbowOthers && !Local;
-	if(g_Config.m_TcRainbowHook && !DontOthers)
-		Graphics()->SetColor(GameClient()->m_Rainbow.m_RainbowColor.WithAlpha(Alpha));
 
 	Graphics()->RenderQuadContainerAsSprite(m_WeaponEmoteQuadContainerIndex, QuadOffset, HookPos.x, HookPos.y);
 
@@ -637,13 +621,6 @@ void CPlayers::RenderHook(
 
 	Graphics()->QuadsSetRotation(0);
 	Graphics()->SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-	if(g_Config.m_TcRainbowHook && !DontOthers)
-		Graphics()->SetColor(GameClient()->m_Rainbow.m_RainbowColor.WithAlpha(Alpha));
-
-	// bestclient
-	GameClient()->m_HookRope.RenderOverlay(ClientId, Pos, HookPos, Player.m_HookState, Alpha);
-	// bestclient
 
 	RenderHand(&RenderInfo, Position, normalize(HookPos - Pos), -pi / 2, vec2(20, 0) * (RenderInfo.m_Size / 64.0f), Alpha); // bestclient
 }
@@ -835,10 +812,6 @@ void CPlayers::RenderPlayer(
 		Inactive = false;
 	// bestclient
 
-	// bestclient
-	const SJellyTeeDeform JellyDeform = GameClient()->m_JellyTee.GetDeform(ClientId, PrevVel, Vel, Direction, InAir, WantOtherDir, Position);
-	// bestclient
-
 	// evaluate animation
 	float WalkTime = std::fmod(Position.x, 100.0f) / 100.0f;
 	float RunTime = std::fmod(Position.x, 200.0f) / 200.0f;
@@ -892,11 +865,6 @@ void CPlayers::RenderPlayer(
 		if(!(RenderInfo.m_TeeRenderFlags & TEE_NO_WEAPON))
 		{
 			Graphics()->SetColor(1.0f, 1.0f, 1.0f, Alpha);
-
-			// TClient
-			const bool DontOthers = !g_Config.m_TcRainbowOthers && !Local;
-			if(g_Config.m_TcRainbowWeapon && !DontOthers)
-				Graphics()->SetColor(GameClient()->m_Rainbow.m_RainbowColor.WithAlpha(Alpha));
 
 			if(g_Config.m_TcRenderWeaponsAsGun && (Player.m_Weapon == WEAPON_SHOTGUN || Player.m_Weapon == WEAPON_GRENADE || Player.m_Weapon == WEAPON_LASER))
 			{
@@ -1160,10 +1128,10 @@ void CPlayers::RenderPlayer(
 				vec2(GameClient()->m_Snap.m_aCharacters[ClientId].m_Cur.m_X, GameClient()->m_Snap.m_aCharacters[ClientId].m_Cur.m_Y),
 				Client()->IntraGameTick(g_Config.m_ClDummy));
 
-		RenderTools()->RenderTee(&State, &RenderInfo, Player.m_Emote, Direction, ShadowPosition, g_Config.m_ClUnpredictedShadowAlpha / 100.f, Local, JellyDeform.m_BodyScale, JellyDeform.m_FeetScale, JellyDeform.m_BodyAngle, JellyDeform.m_FeetAngle); // bestclient
+		RenderTools()->RenderTee(&State, &RenderInfo, Player.m_Emote, Direction, ShadowPosition, g_Config.m_ClUnpredictedShadowAlpha / 100.f, Local);
 	}
 
-	RenderTools()->RenderTee(&State, &RenderInfo, Player.m_Emote, Direction, Position, Alpha, Local, JellyDeform.m_BodyScale, JellyDeform.m_FeetScale, JellyDeform.m_BodyAngle, JellyDeform.m_FeetAngle); // bestclient
+	RenderTools()->RenderTee(&State, &RenderInfo, Player.m_Emote, Direction, Position, Alpha);
 
 	// bestclient
 	if(ClientId >= 0 && Client()->State() == IClient::STATE_DEMOPLAYBACK && ClientId == GameClient()->m_DemoTeeEditor.SelectedClientId() &&

@@ -377,7 +377,7 @@ void CMenus::RenderSettingsNavNewStyle(CUIRect &TabBar)
 	const char *apGroupNames[SETTINGS_NAV_GROUP_COUNT] = {
 		Localize("DDNet"),
 		TCLocalize("TClient"),
-		Localize("BestClient"),
+		Localize("RequiemClient"),
 	};
 
 	auto LeafName = [&](int Leaf) -> const char * {

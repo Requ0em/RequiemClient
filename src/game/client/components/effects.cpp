@@ -415,7 +415,6 @@ void CEffects::Explosion(vec2 Pos, float Alpha)
 	}
 
 	// bestclient
-	GameClient()->m_PhysicBalls.OnExplosion(Pos, Alpha == 1.0f);
 	// bestclient
 }
 

@@ -4,7 +4,6 @@
 #include "menus.h"
 
 // bestclient
-#include <game/client/components/bestclient/menu_media_background.h>
 #include <game/client/components/bestclient/settings_search.h>
 #include <game/client/components/bestclient/ui_theme/style.h>
 #include <game/client/components/bestclient/ui_theme/widgets.h>
@@ -848,7 +847,11 @@ void CMenus::RenderLoadingDirect(const char *pCaption, const char *pContent, std
 		// the menu background is not loaded yet.
 		return;
 	}
-	if(!GameClient()->m_MenuBackground.Render())
+	if(BestClientUiTheme::IsNewStyle())
+	{
+		RenderRequiemBackground();
+	}
+	else if(!GameClient()->m_MenuBackground.Render())
 	{
 		RenderBackground();
 	}
@@ -1182,17 +1185,14 @@ void CMenus::Render()
 	}
 	else
 	{
-		// bestclient
-		const float MediaScreenHeight = 300.0f;
-		const float MediaScreenWidth = MediaScreenHeight * Graphics()->ScreenAspect();
-		CMenuMediaBackground &MediaBackground = GameClient()->m_BestClient.MenuMediaBackground();
-		MediaBackground.SyncFromConfig(g_Config.m_BcMenuMediaBackground, g_Config.m_BcMenuMediaBackgroundPath);
-		MediaBackground.Update();
-		if(!MediaBackground.Render(MediaScreenWidth, MediaScreenHeight) && !GameClient()->m_MenuBackground.Render())
+		if(BestClientUiTheme::IsNewStyle())
+		{
+			RenderRequiemBackground();
+		}
+		else if(!GameClient()->m_MenuBackground.Render())
 		{
 			RenderBackground();
 		}
-		// bestclient
 		ms_ColorTabbarInactive = ms_ColorTabbarInactiveOutgame;
 		ms_ColorTabbarActive = ms_ColorTabbarActiveOutgame;
 		ms_ColorTabbarHover = ms_ColorTabbarHoverOutgame;
@@ -2775,6 +2775,24 @@ void CMenus::RenderBackground()
 	// restore screen
 	Ui()->MapScreen();
 }
+
+// Requiem: neutral dark-red menu backdrop instead of the DDNet sun/tee background.
+void CMenus::RenderRequiemBackground()
+{
+	const float ScreenHeight = 300.0f;
+	const float ScreenWidth = ScreenHeight * Graphics()->ScreenAspect();
+	Graphics()->MapScreenToSize(ScreenWidth, ScreenHeight);
+	Graphics()->TextureClear();
+	Graphics()->BlendNormal();
+	Graphics()->QuadsBegin();
+	Graphics()->SetColor4(ColorRGBA(0.055f, 0.02f, 0.025f, 1.0f), ColorRGBA(0.075f, 0.025f, 0.03f, 1.0f),
+		ColorRGBA(0.20f, 0.045f, 0.06f, 1.0f), ColorRGBA(0.24f, 0.055f, 0.07f, 1.0f));
+	const IGraphics::CQuadItem Quad(0.0f, 0.0f, ScreenWidth, ScreenHeight);
+	Graphics()->QuadsDrawTL(&Quad, 1);
+	Graphics()->QuadsEnd();
+	Ui()->MapScreen();
+}
+
 
 int CMenus::DoButton_CheckBox_Tristate(const void *pId, const char *pText, TRISTATE Checked, const CUIRect *pRect)
 {

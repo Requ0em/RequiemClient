@@ -34,37 +34,39 @@ inline ColorRGBA SettingsNavFromUi(float RgbScale, float Alpha)
 	if(IsCustomUiNavTab())
 		return ColorRGBA(RgbScale, RgbScale, RgbScale, Alpha);
 	const ColorRGBA Gui = color_cast<ColorRGBA>(ColorHSLA(g_Config.m_UiColor, true));
-	return ColorRGBA(Gui.r * RgbScale, Gui.g * RgbScale, Gui.b * RgbScale, Alpha);
+	// Requiem palette: keep the menu chrome in a dark red tint.
+	const ColorRGBA Tint = ColorRGBA(1.0f, 0.24f, 0.26f);
+	return ColorRGBA(Gui.r * RgbScale * Tint.r, Gui.g * RgbScale * Tint.g, Gui.b * RgbScale * Tint.b, Alpha);
 }
 
 inline ColorRGBA SettingsNavGroupInactiveColor()
 {
-	return SettingsNavFromUi(0.16f, 0.86f);
+	return ColorRGBA(0.30f, 0.05f, 0.07f, 0.90f);
 }
 
 inline ColorRGBA SettingsNavGroupActiveColor()
 {
-	return SettingsNavFromUi(0.10f, 0.94f);
+	return ColorRGBA(0.55f, 0.09f, 0.12f, 0.96f);
 }
 
 inline ColorRGBA SettingsNavGroupHoverColor()
 {
-	return SettingsNavFromUi(0.26f, 0.90f);
+	return ColorRGBA(0.43f, 0.07f, 0.10f, 0.92f);
 }
 
 inline ColorRGBA SettingsNavLeafInactiveColor()
 {
-	return SettingsNavFromUi(0.28f, 0.90f);
+	return ColorRGBA(0.26f, 0.05f, 0.06f, 0.90f);
 }
 
 inline ColorRGBA SettingsNavLeafActiveColor()
 {
-	return SettingsNavFromUi(0.16f, 0.96f);
+	return ColorRGBA(0.50f, 0.08f, 0.11f, 0.95f);
 }
 
 inline ColorRGBA SettingsNavLeafHoverColor()
 {
-	return SettingsNavFromUi(0.38f, 0.92f);
+	return ColorRGBA(0.38f, 0.06f, 0.09f, 0.92f);
 }
 
 void DrawCheckBoxChecked(const CUIRect *pBox, float ColorMul);

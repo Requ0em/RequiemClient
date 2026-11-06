@@ -532,6 +532,8 @@ void CMenus::RenderSettingsTClientSettings(CUIRect MainView)
 	{
 		str_copy(g_Config.m_TcCustomFont, s_FontDropDownNames[FontSelectedNew]);
 		// bestclient
+		// An explicit font choice must win over the forced Better font, otherwise the dropdown has no visible effect.
+		g_Config.m_BcMenuUiBetterFont = 0;
 		BestClientApplyMenuFont(TextRender());
 		// bestclient
 
@@ -829,62 +831,6 @@ void CMenus::RenderSettingsTClientSettings(CUIRect MainView)
 	}
 	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
 
-	// ***** Pet ***** //
-	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
-	s_SectionBoxes.push_back(Column);
-	Column.HSplitTop(HeadlineHeight, &Label, &Column);
-	Ui()->DoLabel(&Label, TCLocalize("Pet"), HeadlineFontSize, TEXTALIGN_ML);
-	Column.HSplitTop(MarginSmall, nullptr, &Column);
-
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_TcPetShow, TCLocalize("Show the pet"), &g_Config.m_TcPetShow, &Column, LineSize);
-	Column.HSplitTop(LineSize, &Button, &Column);
-	Ui()->DoScrollbarOption(&g_Config.m_TcPetSize, &g_Config.m_TcPetSize, &Button, TCLocalize("Pet size"), 10, 500, &CUi::ms_LinearScrollbarScale, 0, "%");
-	Column.HSplitTop(LineSize, &Button, &Column);
-	Ui()->DoScrollbarOption(&g_Config.m_TcPetAlpha, &g_Config.m_TcPetAlpha, &Button, TCLocalize("Pet alpha"), 10, 100, &CUi::ms_LinearScrollbarScale, 0, "%");
-	Column.HSplitTop(LineSize + MarginExtraSmall, &Button, &Column);
-	Button.VSplitMid(&Label, &Button);
-	Ui()->DoLabel(&Label, TCLocalize("Pet Skin:"), FontSize, TEXTALIGN_ML);
-	static CLineInput s_PetSkin(g_Config.m_TcPetSkin, sizeof(g_Config.m_TcPetSkin));
-	Ui()->DoEditBox(&s_PetSkin, &Button, EditBoxFontSize);
-
-	// Pet Preview
-	Column.HSplitTop(MarginSmall, nullptr, &Column);
-	CUIRect Preview;
-	Column.HSplitTop(64.0f, &Preview, &Column);
-
-	CTeeRenderInfo TeeInfo;
-	const CSkin *pSkin = GameClient()->m_Skins.Find(g_Config.m_TcPetSkin);
-	if(!pSkin || str_comp(pSkin->GetName(), g_Config.m_TcPetSkin) != 0)
-		pSkin = GameClient()->m_Skins.Find("default");
-
-	TeeInfo.m_OriginalRenderSkin = pSkin->m_OriginalSkin;
-	TeeInfo.m_ColorableRenderSkin = pSkin->m_ColorableSkin;
-	TeeInfo.m_SkinMetrics = pSkin->m_Metrics;
-	TeeInfo.m_CustomColoredSkin = false;
-	TeeInfo.m_ColorBody = ColorRGBA(1.0f, 1.0f, 1.0f);
-	TeeInfo.m_ColorFeet = ColorRGBA(1.0f, 1.0f, 1.0f);
-	TeeInfo.m_Size = 64.0f;
-
-	const CAnimState *pIdleState = CAnimState::GetIdle();
-	vec2 OffsetToMid;
-	CRenderTools::GetRenderTeeOffsetToRenderedTee(pIdleState, &TeeInfo, OffsetToMid);
-	vec2 TeeRenderPos = Preview.Center();
-	TeeRenderPos.y += OffsetToMid.y;
-
-	vec2 Dir = Ui()->MousePos() - TeeRenderPos;
-	const float Length = length(Dir);
-	if(Length > 0.0f)
-		Dir /= Length;
-	if(Length < 0.4f * 64.0f)
-	{
-		Dir = vec2(1.0f, 0.0f);
-	}
-
-	int PetEmote = g_Config.m_ClPlayerDefaultEyes;
-	RenderTools()->RenderTee(pIdleState, &TeeInfo, PetEmote, Dir, TeeRenderPos);
-
-	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
-
 	// ***** RightView ***** //
 	LeftView = Column;
 	Column = RightView;
@@ -1077,39 +1023,6 @@ void CMenus::RenderSettingsTClientSettings(CUIRect MainView)
 
 	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
 
-	// ***** Rainbow ***** //
-	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
-	s_SectionBoxes.push_back(Column);
-	Column.HSplitTop(HeadlineHeight, &Label, &Column);
-	Ui()->DoLabel(&Label, TCLocalize("Rainbow"), HeadlineFontSize, TEXTALIGN_ML);
-	Column.HSplitTop(MarginSmall, nullptr, &Column);
-
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_TcRainbowTees, TCLocalize("Rainbow Tees"), &g_Config.m_TcRainbowTees, &Column, LineSize);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_TcRainbowWeapon, TCLocalize("Rainbow weapons"), &g_Config.m_TcRainbowWeapon, &Column, LineSize);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_TcRainbowHook, TCLocalize("Rainbow hook"), &g_Config.m_TcRainbowHook, &Column, LineSize);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_TcRainbowOthers, TCLocalize("Rainbow others"), &g_Config.m_TcRainbowOthers, &Column, LineSize);
-
-	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
-	static std::vector<const char *> s_RainbowDropDownNames;
-	s_RainbowDropDownNames = {TCLocalize("Rainbow"), TCLocalize("Pulse"), TCLocalize("Black"), TCLocalize("Random")};
-	static CUi::SDropDownState s_RainbowDropDownState;
-	static CScrollRegion s_RainbowDropDownScrollRegion;
-	s_RainbowDropDownState.m_SelectionPopupContext.m_pScrollRegion = &s_RainbowDropDownScrollRegion;
-	int RainbowSelectedOld = g_Config.m_TcRainbowMode - 1;
-	CUIRect RainbowDropDownRect;
-	Column.HSplitTop(LineSize, &RainbowDropDownRect, &Column);
-	const int RainbowSelectedNew = Ui()->DoDropDown(&RainbowDropDownRect, RainbowSelectedOld, s_RainbowDropDownNames.data(), s_RainbowDropDownNames.size(), s_RainbowDropDownState);
-	if(RainbowSelectedOld != RainbowSelectedNew)
-	{
-		g_Config.m_TcRainbowMode = RainbowSelectedNew + 1;
-	}
-	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
-	Column.HSplitTop(LineSize, &Button, &Column);
-	Ui()->DoScrollbarOption(&g_Config.m_TcRainbowSpeed, &g_Config.m_TcRainbowSpeed, &Button, TCLocalize("Rainbow speed"), 0, 5000, &CUi::ms_LogarithmicScrollbarScale, 0, "%");
-	Column.HSplitTop(MarginExtraSmall, nullptr, &Column);
-	s_SectionBoxes.back().h = Column.y - s_SectionBoxes.back().y;
-	Column.HSplitTop(MarginSmall, nullptr, &Column);
-
 	// ***** Tee Trails ***** //
 	Column.HSplitTop(MarginBetweenSections, nullptr, &Column);
 	s_SectionBoxes.push_back(Column);
@@ -1198,7 +1111,6 @@ void CMenus::RenderSettingsTClientSettings(CUIRect MainView)
 
 	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_TcChangeNameNearFinish, TCLocalize("Attempt to change your name when near finish"), &g_Config.m_TcChangeNameNearFinish, &Column, LineSize);
 	// Column.HSplitTop(LineSize, &Button, &Column); // TODO finish scan radius
-	// Ui()->DoScrollbarOption(&g_Config.m_TcPetSize, &g_Config.m_TcPetSize, &Button, TCLocalize("Pet size"), 10, 500, &CUi::ms_LinearScrollbarScale, 0, "%");
 	Column.HSplitTop(LineSize + MarginExtraSmall, &Button, &Column);
 	Button.VSplitMid(&Label, &Button);
 	Ui()->DoLabel(&Label, TCLocalize("Finish Name:"), FontSize, TEXTALIGN_ML);
@@ -2744,7 +2656,7 @@ void CMenus::RenderSettingsTClientConfigs(CUIRect MainView)
 			g_Config.m_TcUiShowTClient ^= 1;
 		if(DoButton_CheckBox(&g_Config.m_TcUiShowDDNet, Localize("DDNet"), g_Config.m_TcUiShowDDNet, &TopCol2))
 			g_Config.m_TcUiShowDDNet ^= 1;
-		if(DoButton_CheckBox(&g_Config.m_TcUiShowBestClient, Localize("BestClient"), g_Config.m_TcUiShowBestClient, &TopCol3))
+		if(DoButton_CheckBox(&g_Config.m_TcUiShowBestClient, Localize("RequiemClient"), g_Config.m_TcUiShowBestClient, &TopCol3))
 			g_Config.m_TcUiShowBestClient ^= 1; // bestclient
 	}
 

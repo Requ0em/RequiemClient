@@ -12,6 +12,7 @@
 #include <generated/client_data.h>
 
 #include <game/client/animstate.h>
+#include <game/client/components/bestclient/bestclient.h> // bestclient
 #include <game/client/components/bestclient/demo_tee_editor.h> // bestclient
 #include <game/client/components/bestclient/gradient.h> // bestclient
 #include <game/client/components/bestclient/version.h> // bestclient
@@ -61,11 +62,12 @@ public:
 	bool m_IsUserBClientIndicator;
 	bool m_IsUserDeveloperIndicator;
 	bool m_IsUserFakeIndicator;
+	bool m_IsUserFakeRequiemIndicator;
+	bool m_IsUserRequiemIndicator;
 	bool m_IsUserLightIndicator;
 	bool m_ShowBClientVersion;
 	float m_FontSizeBClientVersion;
 	char m_aBClientVersion[32];
-	bool m_ShowVoiceTalking;
 	bool m_ShowTeeCoords;
 	int m_TeeCoordX100;
 	float m_FontSizeTeeCoords;
@@ -881,7 +883,7 @@ protected:
 		m_ShiftOnInvis = !g_Config.m_BcClientIndicatorInNamePlateDynamic;
 		m_Size = vec2(Data.m_FontSizeBClientIndicator + DEFAULT_PADDING, Data.m_FontSizeBClientIndicator + DEFAULT_PADDING);
 		m_Visible = Data.m_IsUserBClientIndicator;
-		const int ImageId = Data.m_IsUserDeveloperIndicator ? IMAGE_BCDEVICON : (Data.m_IsUserFakeIndicator ? IMAGE_BCFAKEICON : (Data.m_IsUserLightIndicator ? IMAGE_BCLIGHTICON : IMAGE_BCICON));
+		const int ImageId = BestClientIndicatorImageId({Data.m_IsUserDeveloperIndicator, Data.m_IsUserFakeIndicator, Data.m_IsUserLightIndicator, Data.m_IsUserFakeRequiemIndicator, Data.m_IsUserRequiemIndicator});
 		m_Texture = g_pData->m_aImages[ImageId].m_Id;
 		m_Color = ColorRGBA(1.0f, 1.0f, 1.0f, Data.m_Color.a);
 	}
@@ -898,47 +900,6 @@ public:
 		CNamePlatePartIcon(This)
 	{
 		m_Texture = g_pData->m_aImages[IMAGE_BCICON].m_Id;
-		m_Padding = vec2(0.0f, 0.0f);
-	}
-};
-
-// bestclient
-class CNamePlatePartVoiceTalking : public CNamePlatePartText
-{
-	float m_FontSize = -INFINITY;
-
-protected:
-	bool UpdateNeeded(CGameClient &This, const CNamePlateData &Data) override
-	{
-		(void)This;
-		m_Visible = Data.m_ShowVoiceTalking;
-		if(!m_Visible)
-			return false;
-		m_Color = ColorRGBA(0.68f, 1.0f, 0.68f, Data.m_Color.a);
-		return m_FontSize != Data.m_FontSize;
-	}
-
-	void UpdateText(CGameClient &This, const CNamePlateData &Data) override
-	{
-		m_FontSize = Data.m_FontSize;
-		CTextCursor Cursor;
-		This.TextRender()->SetFontPreset(EFontPreset::ICON_FONT);
-		Cursor.m_FontSize = m_FontSize;
-		This.TextRender()->CreateOrAppendTextContainer(m_TextContainerIndex, &Cursor, FontIcon::MICROPHONE);
-		This.TextRender()->SetFontPreset(EFontPreset::DEFAULT_FONT);
-	}
-
-	void Render(CGameClient &This, vec2 Pos) const override
-	{
-		Pos.x += (float)g_Config.m_BcNameplateVoiceOffsetX;
-		Pos.y += (float)g_Config.m_BcNameplateVoiceOffsetY;
-		CNamePlatePartText::Render(This, Pos);
-	}
-
-public:
-	CNamePlatePartVoiceTalking(CGameClient &This) :
-		CNamePlatePartText(This)
-	{
 		m_Padding = vec2(0.0f, 0.0f);
 	}
 };
@@ -1141,7 +1102,6 @@ private:
 			AddPart<CNamePlatePartClientId>(This, false);
 			// bestclient
 			AddPart<CNamePlatePartBClientIndicator>(This);
-			AddPart<CNamePlatePartVoiceTalking>(This);
 			// bestclient
 			AddPart<CNamePlatePartName>(This);
 			AddPart<CNamePlatePartNewLine>(This);
@@ -1440,9 +1400,18 @@ void CNamePlates::RenderNamePlateGame(vec2 Position, const CNetObj_PlayerInfo *p
 	Data.m_IsUserBClientIndicator = Data.m_ShowBClientIndicator && GameClient()->m_ClientIndicator.IsPlayerBClient(pPlayerInfo->m_ClientId);
 	Data.m_IsUserDeveloperIndicator = Data.m_ShowBClientIndicator && GameClient()->m_ClientIndicator.IsPlayerDeveloper(pPlayerInfo->m_ClientId);
 	Data.m_IsUserFakeIndicator = Data.m_ShowBClientIndicator && GameClient()->m_ClientIndicator.IsPlayerFakeVersion(pPlayerInfo->m_ClientId);
+	Data.m_IsUserFakeRequiemIndicator = Data.m_ShowBClientIndicator && GameClient()->m_ClientIndicator.IsPlayerFakeRequiem(pPlayerInfo->m_ClientId);
+	Data.m_IsUserRequiemIndicator = Data.m_ShowBClientIndicator && GameClient()->m_ClientIndicator.IsPlayerRequiem(pPlayerInfo->m_ClientId);
+	// Requiem preview: force the Requiem badge above the local player so the icon can be inspected in game.
+	if(g_Config.m_BcRequiemIndicator && pPlayerInfo->m_ClientId == GameClient()->m_Snap.m_LocalClientId)
+	{
+		Data.m_ShowBClientIndicator = true;
+		Data.m_IsUserBClientIndicator = true;
+		Data.m_IsUserRequiemIndicator = true;
+		Data.m_IsUserFakeRequiemIndicator = false;
+		Data.m_FontSizeBClientIndicator = std::max(Data.m_FontSizeBClientIndicator, Data.m_FontSize);
+	}
 	Data.m_IsUserLightIndicator = Data.m_ShowBClientIndicator && GameClient()->m_ClientIndicator.IsPlayerLightEdition(pPlayerInfo->m_ClientId);
-	Data.m_ShowVoiceTalking = g_Config.m_BcVoiceChatNameplateIcon != 0 &&
-				  GameClient()->m_VoiceChat.IsClientTalking(pPlayerInfo->m_ClientId);
 	Data.m_ShowBClientVersion = false;
 	Data.m_FontSizeBClientVersion = 0.0f;
 	Data.m_aBClientVersion[0] = '\0';
@@ -1597,8 +1566,9 @@ void CNamePlates::RenderNamePlatePreview(vec2 Position, int Dummy)
 	Data.m_IsUserBClientIndicator = Data.m_ShowBClientIndicator;
 	Data.m_IsUserDeveloperIndicator = false;
 	Data.m_IsUserFakeIndicator = false;
+	Data.m_IsUserFakeRequiemIndicator = false;
+	Data.m_IsUserRequiemIndicator = false;
 	Data.m_IsUserLightIndicator = false;
-	Data.m_ShowVoiceTalking = g_Config.m_BcVoiceChatNameplateIcon != 0;
 	Data.m_ShowBClientVersion = false;
 	Data.m_FontSizeBClientVersion = std::max(10.0f, FontSize * 0.75f);
 	Data.m_aBClientVersion[0] = '\0';

@@ -36,8 +36,6 @@ static const SModuleLayout gs_aModuleLayouts[MODULE_COUNT] = {
 	{500.0f, 141.0f, 100, 0, true, true, 0x66000000U, 100},
 	{460.0f, 229.0f, 100, 0, true, true, 0x40000000U, 100},
 	{198.0f, 0.0f, 100, 0, true, false, 0x1E59A36BU, 100},
-	{0.0f, 100.0f, 100, 0, true, false, 0x66000000U, 100},
-	{136.0f, 0.0f, 100, 0, true, false, 0x66000000U, 100},
 	{5.0f, 278.0f, 100, 0, true, false, 0x66000000U, 100},
 	{0.0f, 60.0f, 100, 0, true, true, 0x66000000U, 100},
 	{250.0f, 200.0f, 65, 0, true, true, 0x66000000U, 100},
@@ -47,7 +45,6 @@ static const SModuleLayout gs_aModuleLayouts[MODULE_COUNT] = {
 	{84.5f, 152.0f, 100, 0, true, false, 0x66000000U, 100},
 	{484.0f, 172.0f, 100, 0, true, true, 0x66000000U, 100},
 	{250.0f, 258.0f, 100, 0, true, true, 0x66000000U, 100},
-	{200.0f, 168.0f, 100, 0, true, true, 0xE6000033U, 100},
 };
 
 static const char *gs_apModuleIds[MODULE_COUNT] = {
@@ -63,8 +60,6 @@ static const char *gs_apModuleIds[MODULE_COUNT] = {
 	"spectator_count",
 	"score",
 	"music_player",
-	"voice_hud",
-	"voice_mute_icons",
 	"chat",
 	"votes",
 	"lock_cam",
@@ -74,7 +69,6 @@ static const char *gs_apModuleIds[MODULE_COUNT] = {
 	"keystrokes_mouse",
 	"dummy_actions",
 	"swap_timer",
-	"edge_info",
 };
 
 static const char *gs_apModuleNames[MODULE_COUNT] = {
@@ -90,8 +84,6 @@ static const char *gs_apModuleNames[MODULE_COUNT] = {
 	"Spectator Count",
 	"Score",
 	"Music Player",
-	"Voice HUD",
-	"Voice Mute Icons",
 	"Ingame Chat",
 	"Votes",
 	"Lock Cam",
@@ -101,7 +93,6 @@ static const char *gs_apModuleNames[MODULE_COUNT] = {
 	"Mouse",
 	"Dummy Actions",
 	"Swap timer",
-	"Edge Info",
 };
 
 static SModuleLayout gs_aRuntimeModuleLayouts[MODULE_COUNT];
@@ -382,18 +373,8 @@ void MigrateFromLegacyConfigs()
 	};
 
 	MigrateIfDefault(MODULE_MUSIC_PLAYER, (float)g_Config.m_BcHudMusicPlayerX, (float)g_Config.m_BcHudMusicPlayerY, g_Config.m_BcHudMusicPlayerScale);
-	MigrateIfDefault(MODULE_VOICE_TALKERS, (float)g_Config.m_BcHudVoiceHudX, (float)g_Config.m_BcHudVoiceHudY, g_Config.m_BcHudVoiceHudScale);
-	MigrateIfDefault(MODULE_VOICE_STATUS, (float)g_Config.m_BcHudVoiceMuteIconsX, (float)g_Config.m_BcHudVoiceMuteIconsY, g_Config.m_BcHudVoiceMuteIconsScale);
 	MigrateIfDefault(MODULE_CHAT, (float)g_Config.m_BcHudChatX, (float)g_Config.m_BcHudChatY, g_Config.m_BcHudChatScale);
 	MigrateIfDefault(MODULE_VOTES, (float)g_Config.m_BcHudVotesX, (float)g_Config.m_BcHudVotesY, g_Config.m_BcHudVotesScale);
-
-	if(!HasRuntimeOverrideInternal(MODULE_EDGE_INFO))
-	{
-		SModuleLayout Layout = gs_aModuleLayouts[MODULE_EDGE_INFO];
-		Layout.m_X = g_Config.m_RiEdgeInfoPosX * 4.0f;
-		Layout.m_Y = g_Config.m_RiEdgeInfoPosY * 3.0f;
-		ApplyLayout(MODULE_EDGE_INFO, Layout);
-	}
 
 	if(!HasRuntimeOverrideInternal(MODULE_NOTIFY_LAST))
 	{
@@ -406,20 +387,12 @@ void MigrateFromLegacyConfigs()
 	g_Config.m_BcHudMusicPlayerX = (int)gs_aModuleLayouts[MODULE_MUSIC_PLAYER].m_X;
 	g_Config.m_BcHudMusicPlayerY = (int)gs_aModuleLayouts[MODULE_MUSIC_PLAYER].m_Y;
 	g_Config.m_BcHudMusicPlayerScale = gs_aModuleLayouts[MODULE_MUSIC_PLAYER].m_Scale;
-	g_Config.m_BcHudVoiceHudX = (int)gs_aModuleLayouts[MODULE_VOICE_TALKERS].m_X;
-	g_Config.m_BcHudVoiceHudY = (int)gs_aModuleLayouts[MODULE_VOICE_TALKERS].m_Y;
-	g_Config.m_BcHudVoiceHudScale = gs_aModuleLayouts[MODULE_VOICE_TALKERS].m_Scale;
-	g_Config.m_BcHudVoiceMuteIconsX = (int)gs_aModuleLayouts[MODULE_VOICE_STATUS].m_X;
-	g_Config.m_BcHudVoiceMuteIconsY = (int)gs_aModuleLayouts[MODULE_VOICE_STATUS].m_Y;
-	g_Config.m_BcHudVoiceMuteIconsScale = gs_aModuleLayouts[MODULE_VOICE_STATUS].m_Scale;
 	g_Config.m_BcHudChatX = (int)gs_aModuleLayouts[MODULE_CHAT].m_X;
 	g_Config.m_BcHudChatY = (int)gs_aModuleLayouts[MODULE_CHAT].m_Y;
 	g_Config.m_BcHudChatScale = gs_aModuleLayouts[MODULE_CHAT].m_Scale;
 	g_Config.m_BcHudVotesX = (int)gs_aModuleLayouts[MODULE_VOTES].m_X;
 	g_Config.m_BcHudVotesY = (int)gs_aModuleLayouts[MODULE_VOTES].m_Y;
 	g_Config.m_BcHudVotesScale = gs_aModuleLayouts[MODULE_VOTES].m_Scale;
-	g_Config.m_RiEdgeInfoPosX = 50;
-	g_Config.m_RiEdgeInfoPosY = 56;
 	g_Config.m_TcNotifyWhenLastX = 20;
 	g_Config.m_TcNotifyWhenLastY = 1;
 
@@ -482,11 +455,6 @@ bool IsEditorModule(EModule Module)
 	case MODULE_FROZEN_HUD:
 	case MODULE_NOTIFY_LAST:
 	case MODULE_MUSIC_PLAYER:
-	// bestclient
-	case MODULE_VOICE_TALKERS:
-	case MODULE_VOICE_STATUS:
-	// bestclient
-	case MODULE_EDGE_INFO:
 	// bestclient
 	case MODULE_FINISH_PREDICTION:
 	case MODULE_KEYSTROKES_KEYBOARD:

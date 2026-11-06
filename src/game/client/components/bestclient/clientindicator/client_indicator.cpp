@@ -363,6 +363,23 @@ bool CClientIndicator::IsPlayerFakeVersion(int ClientId) const
 	return false;
 }
 
+bool CClientIndicator::IsPlayerFakeRequiem(int ClientId) const
+{
+	// TODO: detect players running a fake Requiem client build.
+	// The brand/source of the "fake Requiem" flag is not wired yet (presence
+	// server and browser JSON currently only expose the BestClient flags).
+	(void)ClientId;
+	return false;
+}
+
+bool CClientIndicator::IsPlayerRequiem(int ClientId) const
+{
+	// TODO: detect players running the Requiem client build (brand flag not
+	// exposed by the presence server / browser JSON yet).
+	(void)ClientId;
+	return false;
+}
+
 bool CClientIndicator::IsPlayerLightEdition(int ClientId) const
 {
 	if(Client()->State() != IClient::STATE_ONLINE)

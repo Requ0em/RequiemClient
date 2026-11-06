@@ -29,14 +29,12 @@
 
 // components
 #include "components/background.h"
-#include "components/bestclient/3d_particles.h" // bestclient
 #include "components/bestclient/admin_panel.h" // bestclient
 #include "components/bestclient/aspect_ratio.h" // bestclient
 #include "components/bestclient/bestclient.h" // bestclient
 #include "components/bestclient/browser_utils.h" // bestclient
 #include "components/bestclient/config_presets.h" // bestclient
 #include "components/bestclient/demo_tee_editor.h" // bestclient
-#include "components/bestclient/edgehelper.h" // bestclient
 #include "components/bestclient/ego_finished_maps.h" // bestclient
 #include "components/bestclient/legit_finished_maps.h" // bestclient
 #include "components/bestclient/ego_tiles_prediction.h" // bestclient
@@ -45,7 +43,6 @@
 #include "components/bestclient/finish_prediction.h" // bestclient
 #include "components/bestclient/flying_name_plates.h" // bestclient
 #include "components/bestclient/gradient.h" // bestclient
-#include "components/bestclient/jelly_tee.h" // bestclient
 #include "components/bestclient/keystrokes.h" // bestclient
 #include "components/bestclient/music_player.h" // bestclient
 #include "components/bestclient/optimizer.h" // bestclient
@@ -54,7 +51,6 @@
 #include "components/bestclient/rollback_demo.h" // bestclient
 #include "components/bestclient/snap_tap.h" // bestclient
 // bestclient
-#include "components/bestclient/fx/components.h"
 #include "components/bestclient/weapon_vfx.h"
 // bestclient
 #include "components/bestclient/automargin.h" // bestclient
@@ -65,12 +61,10 @@
 #include "components/bestclient/cursor_trail.h" // bestclient
 #include "components/bestclient/gif_bubbles.h" // bestclient
 #include "components/bestclient/hud_editor.h" // bestclient
-#include "components/bestclient/physicball.h" // bestclient
 #include "components/bestclient/show_points.h" // bestclient
 #include "components/bestclient/spec_pause_radio.h" // bestclient
 #include "components/bestclient/twitch_chat.h" // bestclient
 #include "components/bestclient/ui_animations.h" // bestclient
-#include "components/bestclient/voice/voice.h" // bestclient
 // bestclient
 #include "components/bestclient/translate.h" // bestclient
 // bestclient
@@ -119,9 +113,7 @@
 #include "components/tclient/moving_tiles.h"
 #include "components/tclient/mumble.h"
 #include "components/tclient/outlines.h"
-#include "components/tclient/pet.h"
 #include "components/tclient/player_indicator.h"
-#include "components/tclient/rainbow.h"
 #include "components/tclient/scripting.h"
 #include "components/tclient/skinprofiles.h"
 #include "components/tclient/statusbar.h"
@@ -241,11 +233,8 @@ public:
 	CSpecPauseRadio m_SpecPauseRadio; // bestclient
 	CShowPoints m_ShowPoints; // bestclient
 	CClientIndicator m_ClientIndicator; // bestclient
-	CVoiceChat m_VoiceChat; // bestclient
 	CAdminPanel m_AdminPanel; // bestclient
 	CAspectRatio m_AspectRatio; // bestclient
-	C3DParticles m_3DParticles; // bestclient
-	CJellyTee m_JellyTee; // bestclient
 	CBcGradient m_BcGradient; // bestclient
 	CFlyingNamePlates m_FlyingNamePlates; // bestclient
 	CQuickBinds m_QuickBinds; // bestclient
@@ -263,29 +252,13 @@ public:
 	CTwitchChat m_TwitchChat; // bestclient
 	CEgoFinishedMaps m_EgoFinishedMaps; // bestclient
 	CLegitFinishedMaps m_LegitFinishedMaps; // bestclient
-	CEdgeHelper m_EdgeHelper; // bestclient
 	CFinishPrediction m_FinishPrediction; // bestclient
 	CKeystrokes m_Keystrokes; // bestclient
 	// bestclient
 	CWeaponVfx m_WeaponVfx;
-	CFgfWeather m_FgfWeather;
-	CLightning m_Lightning;
-	CHookWind m_HookWind;
-	CHookBlackHole m_HookBlackHole;
-	CHookMagic m_HookMagic;
-	CHookRainbow m_HookRainbow;
-	CHookLightning m_HookLightning;
-	CHookTentacle m_HookTentacle;
-	CHookFire m_HookFire;
-	CHookTroll m_HookTroll;
-	CHookRope m_HookRope;
-	CFgfActions m_FgfActions;
-	CFgfKi m_FgfKi;
-	CFgfIceWard m_FgfIceWard;
 	// bestclient
 	CHudEditor m_HudEditor; // bestclient
 	CChatBubbles m_ChatBubbles; // bestclient
-	CPhysicBalls m_PhysicBalls; // bestclient
 	CChatMedia m_ChatMedia; // bestclient
 	CCursorTrail m_CursorTrail; // bestclient
 	CBcUiAnimations m_BcUiAnimations; // bestclient
@@ -335,11 +308,9 @@ public:
 	CBgDraw m_BgDraw;
 	CTClient m_TClient;
 	CTrails m_Trails;
-	CPet m_Pet;
 	CPlayerIndicator m_PlayerIndicator;
 	COutlines m_Outlines;
 	CMumble m_Mumble;
-	CRainbow m_Rainbow;
 	CWarList m_WarList;
 	CScripting m_Scripting;
 	CMod m_Mod;

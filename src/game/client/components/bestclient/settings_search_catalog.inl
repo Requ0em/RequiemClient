@@ -1,22 +1,4 @@
-	{"Jelly Tee", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcJellyTee, nullptr},
-	{"Jelly Others", SETTINGS_NAV_LEAF_BC_VISUALS, "Jelly Tee", &g_Config.m_BcJellyTeeOthers, &g_Config.m_BcJellyTee},
-	{"Jelly strength", SETTINGS_NAV_LEAF_BC_VISUALS, "Jelly Tee", &g_Config.m_BcJellyTeeStrength, &g_Config.m_BcJellyTee},
-	{"Jelly duration", SETTINGS_NAV_LEAF_BC_VISUALS, "Jelly Tee", &g_Config.m_BcJellyTeeDuration, &g_Config.m_BcJellyTee},
 
-	{"Corner indicator", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcCornerIndicator, nullptr},
-	{"Only in team", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorOnlyInTeam, &g_Config.m_BcCornerIndicator},
-	{"Show alive teammates", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorShowAlive, &g_Config.m_BcCornerIndicator},
-	{"Show frozen teammates", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorShowFrozen, &g_Config.m_BcCornerIndicator},
-	{"Indicate last teammate", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorIndicateLastTeammate, &g_Config.m_BcCornerIndicator},
-	{"Scale by distance", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorProximity, &g_Config.m_BcCornerIndicator},
-	{"Ninja skin when frozen", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorNinjaFrozen, &g_Config.m_BcCornerIndicator},
-	{"Alive size", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorSizeAlive, &g_Config.m_BcCornerIndicator},
-	{"Frozen size", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorSizeFrozen, &g_Config.m_BcCornerIndicator},
-	{"Last teammate size", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorLastTeammateSize, &g_Config.m_BcCornerIndicator},
-	{"Use custom colors", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorCustomColors, &g_Config.m_BcCornerIndicator},
-	{"Alive color", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorColorAlive, &g_Config.m_BcCornerIndicatorCustomColors},
-	{"Frozen color", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorColorFrozen, &g_Config.m_BcCornerIndicatorCustomColors},
-	{"Last teammate color", SETTINGS_NAV_LEAF_BC_VISUALS, "Corner indicator", &g_Config.m_BcCornerIndicatorLastTeammateColor, &g_Config.m_BcCornerIndicatorCustomColors},
 
 	{"Chat Bubbles", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcChatBubbles, nullptr},
 	{"Show chat bubbles above you", SETTINGS_NAV_LEAF_BC_VISUALS, "Chat Bubbles", &g_Config.m_BcChatBubblesSelf, &g_Config.m_BcChatBubbles},
@@ -47,16 +29,7 @@
 	{"Movement drag", SETTINGS_NAV_LEAF_BC_VISUALS, "Flying Name Plates", &g_Config.m_BcFlyingNamePlatesDrag, &g_Config.m_BcFlyingNamePlates},
 	{"Follow speed", SETTINGS_NAV_LEAF_BC_VISUALS, "Flying Name Plates", &g_Config.m_BcFlyingNamePlatesFollow, &g_Config.m_BcFlyingNamePlates},
 
-	{"3D Particles", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_Bc3dParticles, nullptr},
-	{"Density", SETTINGS_NAV_LEAF_BC_VISUALS, "3D Particles", &g_Config.m_Bc3dParticlesDensity, &g_Config.m_Bc3dParticles},
-	{"Particle type", SETTINGS_NAV_LEAF_BC_VISUALS, "3D Particles", &g_Config.m_Bc3dParticlesType, &g_Config.m_Bc3dParticles},
-	{"Size", SETTINGS_NAV_LEAF_BC_VISUALS, "3D Particles", &g_Config.m_Bc3dParticlesSizeMax, &g_Config.m_Bc3dParticles},
-	{"Color mode", SETTINGS_NAV_LEAF_BC_VISUALS, "3D Particles", &g_Config.m_Bc3dParticlesColorMode, &g_Config.m_Bc3dParticles},
-	{"Glow", SETTINGS_NAV_LEAF_BC_VISUALS, "3D Particles", &g_Config.m_Bc3dParticlesGlow, &g_Config.m_Bc3dParticles},
 
-	{"Media Background", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcMenuMediaBackground, nullptr},
-	{"Enable to game background", SETTINGS_NAV_LEAF_BC_VISUALS, "Media Background", &g_Config.m_BcGameMediaBackground, nullptr},
-	{"Map offset", SETTINGS_NAV_LEAF_BC_VISUALS, "Media Background", &g_Config.m_BcGameMediaBackgroundOffset, &g_Config.m_BcGameMediaBackground},
 
 	{"Cursor Trail", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcCursorTrail, nullptr},
 	{"Trail size", SETTINGS_NAV_LEAF_BC_VISUALS, "Cursor Trail", &g_Config.m_BcCursorTrailTrailSize, &g_Config.m_BcCursorTrail},
@@ -98,56 +71,16 @@
 	{"Physic Balls", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcPhysicBallsSpawnCount, nullptr},
 	{"Spawn count", SETTINGS_NAV_LEAF_BC_VISUALS, "Physic Balls", &g_Config.m_BcPhysicBallsSpawnCount, nullptr},
 
-	{"Laser Glow", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcLaserGlow, nullptr},
 	{"Shotgun Glow", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcShotgunGlow, nullptr},
 	{"Rocket Glow", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcRocketGlow, nullptr},
 	{"Enable Nuke effects", SETTINGS_NAV_LEAF_BC_VISUALS, "Rocket Glow", &g_Config.m_BcMemeNukeExplosion, &g_Config.m_BcRocketGlow},
 	{"Screen shake", SETTINGS_NAV_LEAF_BC_VISUALS, "Rocket Glow", &g_Config.m_BcMemeNukeShake, &g_Config.m_BcMemeNukeExplosion},
 	{"Nuke size", SETTINGS_NAV_LEAF_BC_VISUALS, "Rocket Glow", &g_Config.m_BcMemeNukeScale, &g_Config.m_BcMemeNukeExplosion},
 
-	{"Custom hooks", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcHookStyle, nullptr},
-	{"Style the hook", SETTINGS_NAV_LEAF_BC_VISUALS, "Custom hooks", &g_Config.m_BcHookRope, nullptr},
-	{"Style the tip", SETTINGS_NAV_LEAF_BC_VISUALS, "Custom hooks", &g_Config.m_BcHookTip, nullptr},
-	{"Grow time", SETTINGS_NAV_LEAF_BC_VISUALS, "Custom hooks", &g_Config.m_BcHookChargeTime, nullptr},
-	{"Size", SETTINGS_NAV_LEAF_BC_VISUALS, "Custom hooks", &g_Config.m_BcHookSize, nullptr},
 
-	{"Hook effects", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcHookTether, nullptr},
-	{"Hook box", SETTINGS_NAV_LEAF_BC_VISUALS, "Hook effects", &g_Config.m_BcHookLassoBox, nullptr},
-	{"Hook hold", SETTINGS_NAV_LEAF_BC_VISUALS, "Hook effects", &g_Config.m_BcGatheredEnergy, nullptr},
-	{"Air jump ring", SETTINGS_NAV_LEAF_BC_VISUALS, "Hook effects", &g_Config.m_BcAirJump, nullptr},
-	{"Disable jump particles", SETTINGS_NAV_LEAF_BC_VISUALS, "Hook effects", &g_Config.m_BcAirJumpHideParticles, &g_Config.m_BcAirJump},
-	{"Hammer slash", SETTINGS_NAV_LEAF_BC_VISUALS, "Hook effects", &g_Config.m_BcHammerSlash, nullptr},
-	{"Disable hammer particles", SETTINGS_NAV_LEAF_BC_VISUALS, "Hook effects", &g_Config.m_BcHammerHideParticles, &g_Config.m_BcHammerSlash},
-	{"Hold aura", SETTINGS_NAV_LEAF_BC_VISUALS, "Hook effects", &g_Config.m_BcGatheredEnergyAura, &g_Config.m_BcGatheredEnergy},
-	{"Hold burst", SETTINGS_NAV_LEAF_BC_VISUALS, "Hook effects", &g_Config.m_BcGatheredEnergyBurst, &g_Config.m_BcGatheredEnergy},
-	{"Energy motes", SETTINGS_NAV_LEAF_BC_VISUALS, "Hook effects", &g_Config.m_BcGatheredEnergyAmount, &g_Config.m_BcGatheredEnergy},
 
-	{"Weather", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcAtmosphere, nullptr},
-	{"Size", SETTINGS_NAV_LEAF_BC_VISUALS, "Weather", &g_Config.m_BcWeatherSnowSize, &g_Config.m_BcAtmosphere},
-	{"Speed", SETTINGS_NAV_LEAF_BC_VISUALS, "Weather", &g_Config.m_BcWeatherSnowSpeed, &g_Config.m_BcAtmosphere},
-	{"Size", SETTINGS_NAV_LEAF_BC_VISUALS, "Weather", &g_Config.m_BcWeatherRainSize, &g_Config.m_BcAtmosphere},
-	{"Speed", SETTINGS_NAV_LEAF_BC_VISUALS, "Weather", &g_Config.m_BcWeatherRainSpeed, &g_Config.m_BcAtmosphere},
-	{"Tilt", SETTINGS_NAV_LEAF_BC_VISUALS, "Weather", &g_Config.m_BcWeatherRainTilt, &g_Config.m_BcAtmosphere},
-	{"Size", SETTINGS_NAV_LEAF_BC_VISUALS, "Weather", &g_Config.m_BcWeatherFireflySize, &g_Config.m_BcAtmosphere},
-	{"Speed", SETTINGS_NAV_LEAF_BC_VISUALS, "Weather", &g_Config.m_BcWeatherFireflySpeed, &g_Config.m_BcAtmosphere},
-	{"Size", SETTINGS_NAV_LEAF_BC_VISUALS, "Weather", &g_Config.m_BcWeatherDustSize, &g_Config.m_BcAtmosphere},
-	{"Speed", SETTINGS_NAV_LEAF_BC_VISUALS, "Weather", &g_Config.m_BcWeatherDustSpeed, &g_Config.m_BcAtmosphere},
 
-	{"Freeze lifesteal", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcFreezePull, nullptr},
-	{"Shield", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lifesteal", &g_Config.m_BcFreezePullShield, &g_Config.m_BcFreezePull},
-	{"Reach", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lifesteal", &g_Config.m_BcFreezePullRange, &g_Config.m_BcFreezePull},
-	{"Amount", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lifesteal", &g_Config.m_BcFreezePullStrands, &g_Config.m_BcFreezePull},
-	{"Frost", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lifesteal", &g_Config.m_BcFreezePullSparks, &g_Config.m_BcFreezePull},
-	{"Custom hook color", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lifesteal", &g_Config.m_BcFreezePullHookColor, &g_Config.m_BcFreezePull},
-	{"Cold color", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lifesteal", &g_Config.m_BcFreezePullColor, &g_Config.m_BcFreezePull},
 
-	{"Freeze lightning", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals", &g_Config.m_BcFreezeLightning, nullptr},
-	{"Impact", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lightning", &g_Config.m_BcFreezeLightningImpact, &g_Config.m_BcFreezeLightning},
-	{"Height", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lightning", &g_Config.m_BcFreezeLightningHeight, &g_Config.m_BcFreezeLightning},
-	{"Thickness", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lightning", &g_Config.m_BcFreezeLightningThickness, &g_Config.m_BcFreezeLightning},
-	{"Branches", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lightning", &g_Config.m_BcFreezeLightningBranches, &g_Config.m_BcFreezeLightning},
-	{"Shake", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lightning", &g_Config.m_BcFreezeLightningShake, &g_Config.m_BcFreezeLightning},
-	{"Color", SETTINGS_NAV_LEAF_BC_VISUALS, "Freeze lightning", &g_Config.m_BcFreezeLightningColor, &g_Config.m_BcFreezeLightning},
 
 	{"Map preview in server list", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals QoL", &g_Config.m_BcServerMapPreview, nullptr},
 	{"Show coordinates above tees", SETTINGS_NAV_LEAF_BC_VISUALS, "Visuals QoL", &g_Config.m_BcShowTeeCoords, nullptr},
@@ -217,8 +150,6 @@
 	{"Show percentage", SETTINGS_NAV_LEAF_BC_GAMEPLAY, "Finish Prediction", &g_Config.m_BcFinishPredictionShowPercentage, &g_Config.m_BcFinishPrediction},
 	{"Show always", SETTINGS_NAV_LEAF_BC_GAMEPLAY, "Finish Prediction", &g_Config.m_BcFinishPredictionShowAlways, &g_Config.m_BcFinishPrediction},
 
-	{"Edge Info", SETTINGS_NAV_LEAF_BC_GAMEPLAY, "Gameplay", &g_Config.m_RiEdgeInfoCords, nullptr},
-	{"Show edge info about jumps", SETTINGS_NAV_LEAF_BC_GAMEPLAY, "Edge Info", &g_Config.m_RiEdgeInfoJump, nullptr},
 
 	{"High DDNet Process Priority", SETTINGS_NAV_LEAF_BC_GAMEPLAY, "Performance", &g_Config.m_BcHighProcessPriority, nullptr},
 	{"Lower Discords Process Priority", SETTINGS_NAV_LEAF_BC_GAMEPLAY, "Performance", &g_Config.m_BcDiscordNormalProcessPriority, nullptr},
@@ -237,7 +168,6 @@
 
 	{"Focus Mode", SETTINGS_NAV_LEAF_BC_OTHERS, "Others", &g_Config.m_ClFocusMode, nullptr},
 
-	{"Voice", SETTINGS_NAV_LEAF_BC_OTHERS, "Others", &g_Config.m_BcVoiceChatEnable, nullptr},
 
 	{"Client Indicator", SETTINGS_NAV_LEAF_BC_OTHERS, "Others", &g_Config.m_BcClientIndicatorInNamePlate, nullptr},
 	{"Show indicator in scoreboard", SETTINGS_NAV_LEAF_BC_OTHERS, "Client Indicator", &g_Config.m_BcClientIndicatorInScoreboard, nullptr},
@@ -278,9 +208,6 @@
 
 	{"Player Indicator", SETTINGS_NAV_LEAF_TC_SETTINGS, "Settings", &g_Config.m_TcPlayerIndicator, nullptr},
 
-	{"Pet", SETTINGS_NAV_LEAF_TC_SETTINGS, "Settings", &g_Config.m_TcPetShow, nullptr},
-	{"Pet size", SETTINGS_NAV_LEAF_TC_SETTINGS, "Pet", &g_Config.m_TcPetSize, &g_Config.m_TcPetShow},
-	{"Pet alpha", SETTINGS_NAV_LEAF_TC_SETTINGS, "Pet", &g_Config.m_TcPetAlpha, &g_Config.m_TcPetShow},
 
 	{"Frozen Tee Display", SETTINGS_NAV_LEAF_TC_SETTINGS, "Settings", &g_Config.m_TcShowFrozenHud, nullptr},
 
@@ -288,9 +215,6 @@
 
 	{"Ghost Tools", SETTINGS_NAV_LEAF_TC_SETTINGS, "Settings", &g_Config.m_TcShowOthersGhosts, nullptr},
 
-	{"Rainbow", SETTINGS_NAV_LEAF_TC_SETTINGS, "Settings", &g_Config.m_TcRainbowTees, nullptr},
-	{"Rainbow weapons", SETTINGS_NAV_LEAF_TC_SETTINGS, "Rainbow", &g_Config.m_TcRainbowWeapon, nullptr},
-	{"Rainbow hook", SETTINGS_NAV_LEAF_TC_SETTINGS, "Rainbow", &g_Config.m_TcRainbowHook, nullptr},
 
 	{"Tee Trails", SETTINGS_NAV_LEAF_TC_SETTINGS, "Settings", &g_Config.m_TcTeeTrail, nullptr},
 	{"Trail width", SETTINGS_NAV_LEAF_TC_SETTINGS, "Tee Trails", &g_Config.m_TcTeeTrailWidth, &g_Config.m_TcTeeTrail},

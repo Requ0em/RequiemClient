@@ -139,7 +139,6 @@ void CGameClient::OnConsoleInit()
 					      &m_Voting,
 					      &m_Particles, // doesn't render anything, just updates all the particles
 					      &m_RaceDemo,
-					      &m_Rainbow, // TClient
 					      &m_MapSounds,
 					      &m_Censor,
 					      &m_Background, // render instead of m_MapLayersBackground when g_Config.m_ClOverlayEntities == 100
@@ -149,10 +148,8 @@ void CGameClient::OnConsoleInit()
 					      &m_Particles.m_RenderTrailExtra,
 					      &m_Items,
 					      &m_Trails, // TClient
-					      &m_3DParticles, // bestclient
 					      &m_Ghost,
 					      &m_TClient, // TClient (Must be before chat and players)
-					      &m_JellyTee, // bestclient
 					      &m_BcGradient, // bestclient
 					      &m_FlyingNamePlates, // bestclient
 					      &m_Players,
@@ -164,29 +161,13 @@ void CGameClient::OnConsoleInit()
 					      &m_MovingTilesForeground, // TClient
 					      &m_Outlines, // TClient
 					      &m_Mumble, // TClient
-					      &m_Pet, // TClient
 					      // bestclient
-					      &m_FgfWeather,
-					      &m_Lightning,
-					      &m_HookWind,
-					      &m_HookBlackHole,
-					      &m_HookMagic,
-					      &m_HookRainbow,
-					      &m_HookLightning,
-					      &m_HookTentacle,
-					      &m_HookFire,
-					      &m_HookTroll,
-					      &m_HookRope,
-					      &m_FgfActions,
-					      &m_FgfKi,
-					      &m_FgfIceWard,
 					      &m_WeaponVfx,
 					      // bestclient
 					      &m_Particles.m_RenderExplosions,
 					      &m_NamePlates,
 					      &m_GifBubbles, // bestclient
 					      &m_ChatBubbles, // bestclient
-					      &m_PhysicBalls, // bestclient
 					      &m_ChatMedia, // bestclient
 					      &m_CursorTrail, // bestclient
 					      &m_BcUiAnimations, // bestclient
@@ -204,7 +185,6 @@ void CGameClient::OnConsoleInit()
 					      &m_LegitFinishedMaps, // bestclient
 					      &m_ShowPoints, // bestclient
 					      &m_ClientIndicator, // bestclient
-					      &m_VoiceChat, // bestclient
 					      &m_Hud,
 					      &m_BestClient, // bestclient
 					      &m_BcConfigPresets, // bestclient
@@ -230,7 +210,6 @@ void CGameClient::OnConsoleInit()
 					      &m_ImportantAlert,
 					      &m_DebugHud,
 					      &m_TouchControls,
-					      &m_EdgeHelper, // bestclient
 					      &m_FinishPrediction, // bestclient
 					      &m_Keystrokes, // bestclient
 					      &m_Scoreboard,
@@ -5964,8 +5943,6 @@ const char *CGameClient::GetComponentName(const CComponent *pComp) const
 		return "Particles";
 	if(pComp == &m_RaceDemo)
 		return "RaceDemo";
-	if(pComp == &m_Rainbow)
-		return "Rainbow";
 	if(pComp == &m_MapSounds)
 		return "MapSounds";
 	if(pComp == &m_Censor)
@@ -5984,14 +5961,10 @@ const char *CGameClient::GetComponentName(const CComponent *pComp) const
 		return "Items";
 	if(pComp == &m_Trails)
 		return "Trails";
-	if(pComp == &m_3DParticles)
-		return "3DParticles";
 	if(pComp == &m_Ghost)
 		return "Ghost";
 	if(pComp == &m_TClient)
 		return "TClient";
-	if(pComp == &m_JellyTee)
-		return "JellyTee";
 	if(pComp == &m_BcGradient)
 		return "BcGradient";
 	if(pComp == &m_FlyingNamePlates)
@@ -6014,36 +5987,6 @@ const char *CGameClient::GetComponentName(const CComponent *pComp) const
 		return "Outlines";
 	if(pComp == &m_Mumble)
 		return "Mumble";
-	if(pComp == &m_Pet)
-		return "Pet";
-	if(pComp == &m_FgfWeather)
-		return "FgfWeather";
-	if(pComp == &m_Lightning)
-		return "Lightning";
-	if(pComp == &m_HookWind)
-		return "HookWind";
-	if(pComp == &m_HookBlackHole)
-		return "HookBlackHole";
-	if(pComp == &m_HookMagic)
-		return "HookMagic";
-	if(pComp == &m_HookRainbow)
-		return "HookRainbow";
-	if(pComp == &m_HookLightning)
-		return "HookLightning";
-	if(pComp == &m_HookTentacle)
-		return "HookTentacle";
-	if(pComp == &m_HookFire)
-		return "HookFire";
-	if(pComp == &m_HookTroll)
-		return "HookTroll";
-	if(pComp == &m_HookRope)
-		return "HookRope";
-	if(pComp == &m_FgfActions)
-		return "FgfActions";
-	if(pComp == &m_FgfKi)
-		return "FgfKi";
-	if(pComp == &m_FgfIceWard)
-		return "FgfIceWard";
 	if(pComp == &m_WeaponVfx)
 		return "WeaponVfx";
 	if(pComp == &m_Particles.m_RenderExplosions)
@@ -6054,8 +5997,6 @@ const char *CGameClient::GetComponentName(const CComponent *pComp) const
 		return "GifBubbles";
 	if(pComp == &m_ChatBubbles)
 		return "ChatBubbles";
-	if(pComp == &m_PhysicBalls)
-		return "PhysicBalls";
 	if(pComp == &m_ChatMedia)
 		return "ChatMedia";
 	if(pComp == &m_CursorTrail)
@@ -6088,8 +6029,6 @@ const char *CGameClient::GetComponentName(const CComponent *pComp) const
 		return "ShowPoints";
 	if(pComp == &m_ClientIndicator)
 		return "ClientIndicator";
-	if(pComp == &m_VoiceChat)
-		return "VoiceChat";
 	if(pComp == &m_Hud)
 		return "Hud";
 	if(pComp == &m_BestClient)
@@ -6138,8 +6077,6 @@ const char *CGameClient::GetComponentName(const CComponent *pComp) const
 		return "DebugHud";
 	if(pComp == &m_TouchControls)
 		return "TouchControls";
-	if(pComp == &m_EdgeHelper)
-		return "EdgeHelper";
 	if(pComp == &m_FinishPrediction)
 		return "FinishPrediction";
 	if(pComp == &m_Keystrokes)

@@ -552,10 +552,12 @@ void CSpectator::OnRender()
 				Height / 2.0f + y + BoxMove + (LineHeight - BestClientIconSize) / 2.0f,
 				BestClientIconSize,
 				BestClientIconSize};
-			BestClientRenderIndicatorIcon(Graphics(), IconRect,
+			BestClientRenderIndicatorIcon(Graphics(), IconRect, {
 				GameClient()->m_ClientIndicator.IsPlayerDeveloper(pInfo->m_ClientId),
 				GameClient()->m_ClientIndicator.IsPlayerFakeVersion(pInfo->m_ClientId),
-				GameClient()->m_ClientIndicator.IsPlayerLightEdition(pInfo->m_ClientId));
+				GameClient()->m_ClientIndicator.IsPlayerLightEdition(pInfo->m_ClientId),
+				GameClient()->m_ClientIndicator.IsPlayerFakeRequiem(pInfo->m_ClientId),
+				GameClient()->m_ClientIndicator.IsPlayerRequiem(pInfo->m_ClientId)});
 		}
 		// bestclient
 

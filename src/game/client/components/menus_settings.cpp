@@ -98,7 +98,7 @@ void CMenus::RenderSettings(CUIRect MainView)
 	// render background
 	CUIRect Button, TabBar, RestartBar;
 	// bestclient
-	const float TabBarWidth = 120.0f;
+	const float TabBarWidth = 152.0f;
 	const bool NavOnLeft = BestClientUiTheme::IsSettingsNavOnLeft();
 	if(NavOnLeft)
 		MainView.VSplitLeft(TabBarWidth, &TabBar, &MainView);
@@ -107,6 +107,16 @@ void CMenus::RenderSettings(CUIRect MainView)
 	BestClientUiTheme::DrawUiMainPanel(&MainView, ms_ColorTabbarActive, false, IGraphics::CORNER_B, 10.0f);
 	// bestclient
 	MainView.Margin(20.0f, &MainView);
+
+	// Requiem: always-visible settings search (Dota-style top bar).
+	CUIRect SearchRow, SearchBar;
+	MainView.HSplitTop(26.0f, &SearchRow, &MainView);
+	MainView.HSplitTop(8.0f, nullptr, &MainView);
+	SearchBar = SearchRow;
+	const float SearchWidth = std::min(SearchRow.w * 0.5f, 420.0f);
+	SearchBar.w = SearchWidth;
+	SearchBar.x = SearchRow.x + (SearchRow.w - SearchWidth) * 0.5f;
+	BestClientSettingsSearch::RenderSearchField(this, Ui(), GameClient(), Input(), SearchBar);
 
 	const bool NeedRestart = m_NeedRestartGraphics || m_NeedRestartSound || m_NeedRestartUpdate || m_NeedRestartDiscord; // bestclient
 	if(NeedRestart)
@@ -125,7 +135,6 @@ void CMenus::RenderSettings(CUIRect MainView)
 	if(!ExploreLockCorner)
 	{
 		BestClientSettingsSearch::Update(Client()->RenderFrameTime());
-		BestClientSettingsSearch::RenderCornerButton(this, Ui(), GameClient(), Input(), Button);
 	}
 	// bestclient
 
@@ -149,7 +158,7 @@ void CMenus::RenderSettings(CUIRect MainView)
 			Localize("DDNet"),
 			Localize("Assets"),
 			TCLocalize("TClient"), // TClient
-			Localize("BestClient"), // bestclient
+			Localize("RequiemClient"), // bestclient
 			Localize("Profiles"), // TClient
 			Localize("Configs"), // TClient
 			Localize("Credits")};
@@ -194,7 +203,7 @@ void CMenus::RenderSettings(CUIRect MainView)
 		if(UpdateReady)
 		{
 			TextRender()->TextColor(0.7f, 1.0f, 0.7f, 1.0f);
-			Ui()->DoLabel(&RestartBar, Localize("BestClient update downloaded! Restart to apply."), 14.0f, TEXTALIGN_ML);
+			Ui()->DoLabel(&RestartBar, Localize("RequiemClient update downloaded! Restart to apply."), 14.0f, TEXTALIGN_ML);
 			TextRender()->TextColor(1.0f, 1.0f, 1.0f, 1.0f);
 		}
 		else

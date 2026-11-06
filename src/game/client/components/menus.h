@@ -691,11 +691,6 @@ protected:
 	// bestclient
 	static float FrozenSkinSettingsHeight();
 	void RenderFrozenSkinSettings(CUIRect &View);
-	struct SPopupVoiceModerationContext
-	{
-		CMenus *m_pMenus;
-	};
-	static CUi::EPopupMenuFunctionResult PopupVoiceModeration(void *pContext, CUIRect View, bool Active);
 	// bestclient
 
 	// found in menus_settings_tee.cpp
@@ -761,6 +756,7 @@ public:
 	const IGraphics::CTextureHandle &BcLogoTexture() const { return m_BcLogoTexture; }
 
 	void RenderBackground();
+	void RenderRequiemBackground(); // bestclient
 
 	CMenus();
 	int Sizeof() const override { return sizeof(*this); }
@@ -808,6 +804,7 @@ public:
 	};
 
 	// bestclient
+	bool IsPopupOpen() const { return m_Popup != POPUP_NONE; }
 	bool IsIngameGamePage() const { return m_MenuActive && Client()->State() == IClient::STATE_ONLINE && m_GamePage == PAGE_GAME; }
 	bool IsServerBrowserPageActive() const
 	{
@@ -1017,7 +1014,6 @@ private:
 	void RenderSettingsBestClientGameplay(CUIRect MainView);
 	void RenderSettingsBestClientOthers(CUIRect MainView);
 	// bestclient
-	void RenderSettingsBestClientFun(CUIRect MainView);
 	// bestclient
 	void RenderSettingsBestClientInfo(CUIRect MainView); // bestclient
 	void RenderSettingsBestClientConfigPresets(CUIRect MainView); // bestclient

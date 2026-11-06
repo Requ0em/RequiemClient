@@ -20,7 +20,6 @@
 #include <generated/protocol.h>
 
 #include <game/client/animstate.h>
-#include <game/client/components/bestclient/corner_indicator.h> // bestclient
 #include <game/client/components/bestclient/cursor_trail.h> // bestclient
 #include <game/client/components/bestclient/gradient.h> // bestclient
 #include <game/client/components/bestclient/hud_extras.h> // bestclient
@@ -2453,18 +2452,12 @@ void CHud::OnRender()
 				RenderLocalTime();
 			GameClient()->m_Voting.Render();
 		}
-		// bestclient
-		CornerIndicator::Render(GameClient());
-		// bestclient
 		RenderWarmupTimer();
 		RenderTextInfo();
 		GameClient()->m_TClient.RenderCenterLines();
 		if(Client()->State() != IClient::STATE_DEMOPLAYBACK)
 			RenderConnectionWarning();
 		RenderTeambalanceWarning();
-		// bestclient
-		GameClient()->m_VoiceChat.RenderHudMuteStatusIndicator(m_Width, m_Height);
-		GameClient()->m_VoiceChat.RenderHudTalkingIndicator(m_Width, m_Height);
 		// bestclient
 		if(g_Config.m_ClShowRecord)
 			RenderRecord();

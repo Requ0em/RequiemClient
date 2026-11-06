@@ -503,14 +503,6 @@ CHudEditor::SModuleVisual CHudEditor::GetModuleVisual(HudLayout::EModule Module)
 		Visual.m_Rect = GameClient()->m_Hud.GetNotifyLastHudEditorRect();
 		Visual.m_Rounding = 2.0f;
 		break;
-	case HudLayout::MODULE_VOICE_TALKERS:
-		Visual.m_Rect = GameClient()->m_VoiceChat.GetHudTalkingIndicatorRect(Width, Height, true);
-		Visual.m_Rounding = 3.1f;
-		break;
-	case HudLayout::MODULE_VOICE_STATUS:
-		Visual.m_Rect = GameClient()->m_VoiceChat.GetHudMuteStatusIndicatorRect(Width, Height, true);
-		Visual.m_Rounding = 2.3f;
-		break;
 	case HudLayout::MODULE_MUSIC_PLAYER:
 	{
 		Visual.m_Rect = GameClient()->m_MusicPlayer.GetHudEditorRect(false);
@@ -521,10 +513,6 @@ CHudEditor::SModuleVisual CHudEditor::GetModuleVisual(HudLayout::EModule Module)
 		Visual.m_Rounding = std::min(5.0f * MusicPlayerScale, Visual.m_Rect.h * 0.24f);
 		break;
 	}
-	case HudLayout::MODULE_EDGE_INFO:
-		Visual.m_Rect = GameClient()->m_EdgeHelper.GetHudEditorRect();
-		Visual.m_Rounding = 3.0f;
-		break;
 	case HudLayout::MODULE_FINISH_PREDICTION:
 		Visual.m_Rect = GameClient()->m_FinishPrediction.GetHudEditorRect();
 		Visual.m_Rounding = 5.0f;
@@ -577,9 +565,6 @@ void CHudEditor::CollectModuleVisuals(SModuleVisual *pOut, int &Count) const
 	AddModule(HudLayout::MODULE_FROZEN_HUD);
 	AddModule(HudLayout::MODULE_NOTIFY_LAST);
 	AddModule(HudLayout::MODULE_MUSIC_PLAYER);
-	AddModule(HudLayout::MODULE_VOICE_TALKERS);
-	AddModule(HudLayout::MODULE_VOICE_STATUS);
-	AddModule(HudLayout::MODULE_EDGE_INFO);
 	AddModule(HudLayout::MODULE_FINISH_PREDICTION);
 	AddModule(HudLayout::MODULE_KEYSTROKES_KEYBOARD);
 	if(g_Config.m_BcKeystrokesStyle != 1)
@@ -1177,9 +1162,6 @@ void CHudEditor::RenderOverlay(vec2 MousePos)
 	GameClient()->m_Hud.RenderNotifyLastPreview();
 	const bool MusicPlayerHasLiveRect = g_Config.m_BcMusicPlayer != 0 && GameClient()->m_MusicPlayer.HudReservation().m_Visible;
 	GameClient()->m_MusicPlayer.RenderHudEditor(!MusicPlayerHasLiveRect);
-	GameClient()->m_VoiceChat.RenderHudTalkingIndicator(Width, Height, true);
-	GameClient()->m_VoiceChat.RenderHudMuteStatusIndicator(Width, Height, true);
-	GameClient()->m_EdgeHelper.RenderPreview();
 	GameClient()->m_FinishPrediction.RenderPreview();
 	GameClient()->m_Keystrokes.RenderKeyboardPreview();
 	GameClient()->m_Keystrokes.RenderMousePreview();

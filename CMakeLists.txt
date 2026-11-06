@@ -453,7 +453,7 @@ if(NOT MSVC AND NOT HAIKU)
   add_cxx_compiler_flag_if_supported(OUR_FLAGS_OWN -Wlogical-op)
   add_cxx_compiler_flag_if_supported(OUR_FLAGS_OWN -Wno-missing-field-initializers)
   add_cxx_compiler_flag_if_supported(OUR_FLAGS_OWN -Wno-nullability-completeness) # Mac OS build on github
-  add_cxx_compiler_flag_if_supported(OUR_FLAGS_OWN -Wno-psabi) # parameter passing for argument of type ‘__gnu_cxx::__normal_iterator<CCommandProcessorFragment_Vulkan::SMemoryBlock<1>*, std::vector<CCommandProcessorFragment_Vulkan::SMemoryBlock<1>, std::allocator<CCommandProcessorFragment_Vulkan::SMemoryBlock<1> > > >’ changed in GCC 7.1
+  add_cxx_compiler_flag_if_supported(OUR_FLAGS_OWN -Wno-psabi) # parameter passing for argument of type вЂ__gnu_cxx::__normal_iterator<CCommandProcessorFragment_Vulkan::SMemoryBlock<1>*, std::vector<CCommandProcessorFragment_Vulkan::SMemoryBlock<1>, std::allocator<CCommandProcessorFragment_Vulkan::SMemoryBlock<1> > > >вЂ™ changed in GCC 7.1
   add_cxx_compiler_flag_if_supported(OUR_FLAGS_OWN -Wno-unused-parameter)
   add_cxx_compiler_flag_if_supported(OUR_FLAGS_OWN -Wrestrict)
   add_cxx_compiler_flag_if_supported(OUR_FLAGS_OWN -Wshadow-all) # clang
@@ -1488,8 +1488,10 @@ set(EXPECTED_DATA
   background_noise.png
   BestClient/bc_dev_icon.png
   BestClient/bc_fake_icon.png
+  BestClient/bc_fake_requiem_icon.png
   BestClient/bc_icon.png
   BestClient/bc_light_icon.png
+  BestClient/bc_requiem_icon.png
   BestClient/gui_logo.png
   BestClient/languages/russian.txt
   BestClient/languages/simplified_chinese.txt
@@ -2915,12 +2917,8 @@ if(CLIENT)
     components/bestclient/aspect_ratio.h
     components/bestclient/gradient.cpp
     components/bestclient/gradient.h
-    components/bestclient/jelly_tee.cpp
-    components/bestclient/jelly_tee.h
     components/bestclient/flying_name_plates.cpp
     components/bestclient/flying_name_plates.h
-    components/bestclient/3d_particles.cpp
-    components/bestclient/3d_particles.h
     components/bestclient/fast_actions.cpp
     components/bestclient/fast_actions.h
     components/bestclient/optimizer.cpp
@@ -2943,13 +2941,10 @@ if(CLIENT)
     components/bestclient/chat_scroll.h
     components/bestclient/console_scroll.cpp
     components/bestclient/console_scroll.h
-    components/bestclient/menu_media_background.cpp
-    components/bestclient/menu_media_background.h
     components/bestclient/server_map_preview.cpp
     components/bestclient/server_map_preview.h
     components/bestclient/menus_assets_editor.cpp
     components/bestclient/menus_bestclient.cpp
-    components/bestclient/menus_games.cpp
     components/bestclient/keybind_map.cpp
     components/bestclient/keybind_map.h
     components/bestclient/keybind_map_ui.h
@@ -2975,50 +2970,12 @@ if(CLIENT)
     components/bestclient/demo_tee_editor.h
     components/bestclient/hud_extras.cpp
     components/bestclient/hud_extras.h
-    components/bestclient/corner_indicator.cpp
-    components/bestclient/corner_indicator.h
     components/bestclient/cursor_trail.cpp
     components/bestclient/cursor_trail.h
     components/bestclient/weapon_vfx.cpp
     components/bestclient/weapon_vfx.h
-    components/bestclient/laser_glow.cpp
     components/bestclient/rocket_glow.cpp
     components/bestclient/nuke_vfx.cpp
-    components/bestclient/menus_fx.cpp
-    components/bestclient/fx/components.h
-    components/bestclient/fx/own_tee.h
-    components/bestclient/fx/fgf_glow.cpp
-    components/bestclient/fx/fgf_glow.h
-    components/bestclient/fx/fgf_actions.cpp
-    components/bestclient/fx/fgf_actions.h
-    components/bestclient/fx/fgf_iceward.cpp
-    components/bestclient/fx/fgf_iceward.h
-    components/bestclient/fx/fgf_ki.cpp
-    components/bestclient/fx/fgf_ki.h
-    components/bestclient/fx/fgf_weather.cpp
-    components/bestclient/fx/fgf_weather.h
-    components/bestclient/fx/lightning.cpp
-    components/bestclient/fx/lightning.h
-    components/bestclient/fx/hookgrip.cpp
-    components/bestclient/fx/hookgrip.h
-    components/bestclient/fx/hookrope.cpp
-    components/bestclient/fx/hookrope.h
-    components/bestclient/fx/hookwind.cpp
-    components/bestclient/fx/hookwind.h
-    components/bestclient/fx/hookblackhole.cpp
-    components/bestclient/fx/hookblackhole.h
-    components/bestclient/fx/hookmagic.cpp
-    components/bestclient/fx/hookmagic.h
-    components/bestclient/fx/hookfire.cpp
-    components/bestclient/fx/hookfire.h
-    components/bestclient/fx/hookrainbow.cpp
-    components/bestclient/fx/hookrainbow.h
-    components/bestclient/fx/hooklightning.cpp
-    components/bestclient/fx/hooklightning.h
-    components/bestclient/fx/hooktentacle.cpp
-    components/bestclient/fx/hooktentacle.h
-    components/bestclient/fx/hooktroll.cpp
-    components/bestclient/fx/hooktroll.h
     components/bestclient/show_points.cpp
     components/bestclient/show_points.h
     components/bestclient/clientindicator/browser_cache.cpp
@@ -3029,15 +2986,10 @@ if(CLIENT)
     components/bestclient/clientindicator/presence_cache.cpp
     components/bestclient/clientindicator/presence_cache.h
     components/bestclient/clientindicator/protocol.h
-    components/bestclient/voice/protocol.h
-    components/bestclient/voice/voice.cpp
-    components/bestclient/voice/voice.h
     components/bestclient/spec_pause_radio.cpp
     components/bestclient/spec_pause_radio.h
     components/bestclient/chat_bubbles.cpp
     components/bestclient/chat_bubbles.h
-    components/bestclient/physicball.cpp
-    components/bestclient/physicball.h
     components/bestclient/ui_animations.cpp
     components/bestclient/ui_animations.h
     components/bestclient/ui_theme/style.h
@@ -3055,8 +3007,6 @@ if(CLIENT)
     components/bestclient/legit_finished_maps.h
     components/bestclient/ego_tiles_prediction.cpp
     components/bestclient/ego_tiles_prediction.h
-    components/bestclient/edgehelper.cpp
-    components/bestclient/edgehelper.h
     components/bestclient/fast_practice.cpp
     components/bestclient/fast_practice.h
     components/bestclient/finish_prediction.cpp
@@ -3220,12 +3170,8 @@ if(CLIENT)
     components/tclient/mumble.h
     components/tclient/outlines.cpp
     components/tclient/outlines.h
-    components/tclient/pet.cpp
-    components/tclient/pet.h
     components/tclient/player_indicator.cpp
     components/tclient/player_indicator.h
-    components/tclient/rainbow.cpp
-    components/tclient/rainbow.h
     components/tclient/scripting.cpp
     components/tclient/scripting.h
     components/tclient/scripting/impl.cpp

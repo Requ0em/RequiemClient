@@ -25,7 +25,6 @@
 #include <generated/client_data.h>
 #include <generated/protocol.h>
 
-#include <game/client/components/bestclient/fx/own_tee.h>
 #include <game/client/components/bestclient/ui_theme/style.h>
 #include <game/client/components/mapimages.h>
 #include <game/client/components/sounds.h>
@@ -217,25 +216,15 @@ bool BestClientShouldMuteOthersAirJumpSound(bool MuteEnabled, bool IsOtherPlayer
 
 void BestClientPlayAirJump(CGameClient *pGameClient, int ClientId, vec2 Pos, float Alpha, float Volume)
 {
-	const bool OtherPlayer = !BcIsOwnTee(pGameClient, ClientId);
-	if(g_Config.m_BcAirJump && g_Config.m_BcAirJumpHideParticles && !OtherPlayer)
-	{
-		if(g_Config.m_SndGame && !BestClientShouldMuteOthersAirJumpSound(g_Config.m_BcMuteOthersAirJump, OtherPlayer))
-			pGameClient->m_Sounds.PlayAt(CSounds::CHN_WORLD, SOUND_PLAYER_AIRJUMP, Volume, Pos);
-		return;
-	}
+	(void)ClientId;
+	const bool OtherPlayer = ClientId >= 0 && ClientId != pGameClient->m_Snap.m_LocalClientId;
 	pGameClient->m_Effects.AirJump(Pos, Alpha, Volume, OtherPlayer);
 }
 
 void BestClientPlayHammerHit(CGameClient *pGameClient, vec2 Pos, float Alpha, float Volume, int ClientId)
 {
-	if(g_Config.m_BcHammerSlash && g_Config.m_BcHammerHideParticles && BcIsOwnTee(pGameClient, ClientId))
-	{
-		if(g_Config.m_SndGame)
-			pGameClient->m_Sounds.PlayAt(CSounds::CHN_WORLD, SOUND_HAMMER_HIT, Volume, Pos);
-		return;
-	}
-	pGameClient->m_Effects.HammerHit(Pos, Alpha, Volume, !BcIsOwnTee(pGameClient, ClientId));
+	const bool OtherPlayer = ClientId >= 0 && ClientId != pGameClient->m_Snap.m_LocalClientId;
+	pGameClient->m_Effects.HammerHit(Pos, Alpha, Volume, OtherPlayer);
 }
 
 bool BestClientIsLocalHammerHitEvent(vec2 HitPos, bool LocalJustFired, vec2 LocalPos, float Radius)
@@ -277,7 +266,6 @@ void CBestClient::SaveUiThemeFileCallback(IConfigManager *, void *pUserData)
 
 void CBestClient::OnInit()
 {
-	m_MenuMediaBackground.Init(Graphics(), Storage());
 	BestClientApplyMenuFont(TextRender());
 	BestClientUiTheme::LoadFile(Storage());
 }
@@ -331,7 +319,6 @@ void CBestClient::OnUpdate()
 void CBestClient::OnShutdown()
 {
 	ResetFindHours();
-	m_MenuMediaBackground.Shutdown();
 	m_SavesNotifySchedule = false;
 	m_SavesNotifyDeadline = 0;
 }
@@ -573,12 +560,27 @@ void BestClientRenderVotePercentages(CUi *pUi, ITextRender *pTextRender, const C
 	pTextRender->TextColor(pTextRender->DefaultTextColor());
 }
 
-void BestClientRenderIndicatorIcon(IGraphics *pGraphics, const CUIRect &Rect, bool Developer, bool Fake, bool Light, ColorRGBA Color)
+int BestClientIndicatorImageId(const SIndicatorFlags &Flags)
+{
+	if(Flags.m_Developer)
+		return IMAGE_BCDEVICON;
+	if(Flags.m_FakeRequiem)
+		return IMAGE_BCFAKEREQUIEMICON;
+	if(Flags.m_Requiem)
+		return IMAGE_BCREQUIEMICON;
+	if(Flags.m_Fake)
+		return IMAGE_BCFAKEICON;
+	if(Flags.m_Light)
+		return IMAGE_BCLIGHTICON;
+	return IMAGE_BCICON;
+}
+
+void BestClientRenderIndicatorIcon(IGraphics *pGraphics, const CUIRect &Rect, const SIndicatorFlags &Flags, ColorRGBA Color)
 {
 	if(!pGraphics)
 		return;
 
-	const int ImageId = Developer ? IMAGE_BCDEVICON : (Fake ? IMAGE_BCFAKEICON : (Light ? IMAGE_BCLIGHTICON : IMAGE_BCICON));
+	const int ImageId = BestClientIndicatorImageId(Flags);
 	pGraphics->TextureSet(g_pData->m_aImages[ImageId].m_Id);
 	pGraphics->QuadsBegin();
 	pGraphics->SetColor(Color);
@@ -865,8 +867,6 @@ float BestClientScoreboardPlayerPopupHeight(const CGameClient *pGameClient, bool
 	int ButtonRows = 7;
 	if(!IsSpectatorRow)
 		ButtonRows++;
-	if(!IsLocal && g_Config.m_BcVoiceChatEnable)
-		ButtonRows += 2;
 	ButtonRows += ExtraButtonRows;
 
 	float Height = OuterPopupPadding + InnerMargin + LabelHeight;

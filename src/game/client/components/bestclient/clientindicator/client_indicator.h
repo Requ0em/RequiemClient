@@ -33,6 +33,8 @@ public:
 	bool IsPlayerBClient(int ClientId) { return IsPlayerBestClient(ClientId); }
 	bool IsPlayerDeveloper(int ClientId) const;
 	bool IsPlayerFakeVersion(int ClientId) const;
+	bool IsPlayerFakeRequiem(int ClientId) const;
+	bool IsPlayerRequiem(int ClientId) const;
 	bool IsPlayerLightEdition(int ClientId) const;
 	bool GetPlayerVersionLabel(int ClientId, char *pVersion, int VersionSize) const;
 

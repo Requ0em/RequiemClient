@@ -84,7 +84,7 @@ static const char *GroupLabel(int Leaf)
 {
 	if(GroupForLeaf(Leaf) == SETTINGS_NAV_GROUP_TCLIENT)
 		return TCLocalize("TClient");
-	return Localize("BestClient");
+	return Localize("RequiemClient");
 }
 
 static void FormatPath(const SEntry &Entry, char *pBuf, size_t BufSize)
@@ -262,6 +262,47 @@ static void OpenSearchPopup(CMenus *pMenus, CUi *pUi, CGameClient *pGameClient, 
 	gs_ForceSearchFocus = true;
 	pUi->SetActiveItem(&gs_SearchInput);
 	gs_SearchInput.SelectAll();
+}
+
+void RenderSearchField(CMenus *pMenus, CUi *pUi, CGameClient *pGameClient, IInput *pInput, CUIRect Rect)
+{
+	static char s_Id;
+	const bool Open = pUi->IsPopupOpen(&gs_PopupContext);
+	const bool Hot = pUi->HotItem() == &s_Id;
+
+	BestClientUiTheme::DrawUiBlock(&Rect, IGraphics::CORNER_ALL, 6.0f);
+	if(Hot || Open)
+		Rect.Draw(ColorRGBA(1.0f, 0.22f, 0.24f, 0.22f), IGraphics::CORNER_ALL, 6.0f);
+
+	CUIRect IconRect = Rect;
+	IconRect.VSplitLeft(Rect.h, &IconRect, nullptr);
+	pUi->TextRender()->SetFontPreset(EFontPreset::ICON_FONT);
+	pUi->TextRender()->SetRenderFlags(ETextRenderFlags::TEXT_RENDER_FLAG_ONLY_ADVANCE_WIDTH | ETextRenderFlags::TEXT_RENDER_FLAG_NO_X_BEARING | ETextRenderFlags::TEXT_RENDER_FLAG_NO_Y_BEARING | ETextRenderFlags::TEXT_RENDER_FLAG_NO_PIXEL_ALIGNMENT | ETextRenderFlags::TEXT_RENDER_FLAG_NO_OVERSIZE);
+	{
+		SLabelProperties Props;
+		Props.SetColor(ColorRGBA(1.0f, 0.55f, 0.55f, Open || Hot ? 1.0f : 0.85f));
+		pUi->DoLabel(&IconRect, FontIcon::MAGNIFYING_GLASS, Rect.h * 0.55f, TEXTALIGN_MC, Props);
+	}
+	pUi->TextRender()->SetRenderFlags(0);
+	pUi->TextRender()->SetFontPreset(EFontPreset::DEFAULT_FONT);
+
+	CUIRect TextRect = Rect;
+	TextRect.VSplitLeft(Rect.h + 4.0f, nullptr, &TextRect);
+	TextRect.VSplitRight(8.0f, &TextRect, nullptr);
+	SLabelProperties Props;
+	Props.SetColor(ColorRGBA(1.0f, 0.78f, 0.78f, 0.85f));
+	pUi->DoLabel(&TextRect, Localize("Search settings"), Rect.h * 0.5f, TEXTALIGN_MC, Props);
+
+	if(pUi->DoButtonLogic(&s_Id, 0, &Rect, BUTTONFLAG_LEFT))
+	{
+		if(Open)
+			pUi->ClosePopupMenu(&gs_PopupContext);
+		else
+			OpenSearchPopup(pMenus, pUi, pGameClient, Rect);
+	}
+
+	if(!pUi->IsPopupOpen() && !pGameClient->m_GameConsole.IsActive() && pInput->ModifierIsPressed() && pInput->KeyPress(KEY_F))
+		OpenSearchPopup(pMenus, pUi, pGameClient, Rect);
 }
 
 void RenderCornerButton(CMenus *pMenus, CUi *pUi, CGameClient *pGameClient, IInput *pInput, CUIRect Corner)

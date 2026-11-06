@@ -13,6 +13,13 @@
 #include <engine/discord.h>
 #include <engine/http.h>
 
+// Discord Rich Presence application. Discord shows the application NAME from the
+// Developer Portal, not this string. To display "RequiemClient" register a new
+// application with that name, upload the logo asset under the key below and
+// replace these two constants.
+static constexpr uint64_t DISCORD_APP_ID = 1568248313931898941ULL;
+static constexpr const char *DISCORD_LOGO_ASSET = "requiemlogo";
+
 #if defined(CONF_DISCORD)
 #include <discord_game_sdk.h>
 
@@ -93,7 +100,7 @@ public:
 		DiscordCreateParams Params;
 		DiscordCreateParamsSetDefault(&Params);
 
-		Params.client_id = 1444576875774083133;
+		Params.client_id = DISCORD_APP_ID;
 		Params.flags = EDiscordCreateFlags::DiscordCreateFlags_NoRequireDiscord;
 		Params.event_data = this;
 		Params.activity_events = &m_ActivityEvents;
@@ -126,7 +133,7 @@ public:
 		m_pActivityManager->register_steam(m_pActivityManager, 412220);
 
 		ClearGameInfo();
-		dbg_msg("discord", "initialized custom RPC (app_id=1444576875774083133)");
+		dbg_msg("discord", "initialized custom RPC (RequiemClient)");
 
 		return false;
 	}
@@ -160,9 +167,9 @@ public:
 	{
 		mem_zero(&m_Activity, sizeof(DiscordActivity));
 
-		str_copy(m_Activity.assets.large_image, "bestclientlogo");
-		str_copy(m_Activity.assets.large_text, "discord.gg/bestclient");
-		str_copy(m_Activity.details, "discord.gg/bestclient");
+		str_copy(m_Activity.assets.large_image, DISCORD_LOGO_ASSET);
+		str_copy(m_Activity.assets.large_text, "RequiemClient");
+		str_copy(m_Activity.details, "RequiemClient");
 		m_Activity.timestamps.start = 0;
 		m_Activity.instance = false;
 
@@ -173,8 +180,8 @@ public:
 	{
 		mem_zero(&m_Activity, sizeof(DiscordActivity));
 
-		str_copy(m_Activity.assets.large_image, "bestclientlogo");
-		str_copy(m_Activity.assets.large_text, "discord.gg/bestclient");
+		str_copy(m_Activity.assets.large_image, DISCORD_LOGO_ASSET);
+		str_copy(m_Activity.assets.large_text, "RequiemClient");
 		m_Activity.timestamps.start = time_timestamp();
 		m_Activity.instance = true;
 		m_ShowMap = ShowMap;
@@ -187,10 +194,10 @@ public:
 		}
 		else
 		{
-			str_copy(m_Activity.assets.small_text, "BestClient player");
+			str_copy(m_Activity.assets.small_text, "RequiemClient player");
 		}
 
-		str_copy(m_Activity.details, "discord.gg/bestclient");
+		str_copy(m_Activity.details, "RequiemClient");
 		if(m_ShowMap)
 		{
 			const char *pDisplayMap = (pMapName && pMapName[0] != '\0') ? pMapName : ServerInfo.m_aMap;

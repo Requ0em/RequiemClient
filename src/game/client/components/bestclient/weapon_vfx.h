@@ -137,7 +137,6 @@ private:
 
 public:
 	int Sizeof() const override { return sizeof(*this); }
-	bool RenderWeaponLaser(vec2 From, vec2 Pos, ColorRGBA OuterColor, ColorRGBA InnerColor, float TicksBody, float TicksHead, int Type) const;
 	bool RenderRocketTrail(const CProjectileData &Data, float Time, float Curvature, float Speed, float Alpha);
 	bool TriggerExplosion(vec2 Pos, float Alpha);
 	void AddShake(float Intensity, float Duration, vec2 SourcePos);

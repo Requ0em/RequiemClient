@@ -219,7 +219,7 @@ void CMenusStart::RenderStartMenu(CUIRect MainView)
 
 			if(ShowDownloadButton)
 			{
-				str_format(aUpdateBuf, sizeof(aUpdateBuf), Localize("BestClient %s is out!"), Updater()->GetLatestVersionString());
+				str_format(aUpdateBuf, sizeof(aUpdateBuf), Localize("RequiemClient %s is out!"), Updater()->GetLatestVersionString());
 				TextRender()->TextColor(1.0f, 0.4f, 0.4f, 1.0f);
 			}
 			else if(ShowUpdateProgress)

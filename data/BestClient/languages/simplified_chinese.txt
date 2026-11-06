@@ -991,10 +991,6 @@ Zoom %
 == 缩放 %
 
 [BestClient]
-Radius (tiles)
-== 半径（图块）
-
-[BestClient]
 Visible area (%)
 == 可见区域（%）
 
@@ -1291,144 +1287,12 @@ Focus mode bind
 == 专注模式按键
 
 [BestClient]
-Voice Moderation
-== 语音管理
-
-[BestClient]
-Voice Binds
-== 语音按键
-
-[BestClient]
-Voice
-== 语音
-
-[BestClient]
-Push-to-talk
-== 按住说话
-
-[BestClient]
-Mute microphone
-== 静音麦克风
-
-[BestClient]
-Mute headphones
-== 静音耳机
-
-[BestClient]
-System default
-== 系统默认
-
-[BestClient]
-Device #%d
-== 设备 #%d
-
-[BestClient]
-Enable voice chat
-== 启用语音聊天
-
-[BestClient]
-In-Game Only
-== 仅在游戏中
-
-[BestClient]
-Use team0
-== 使用 team0
-
-[BestClient]
-Enable your group
-== 启用自己的分组
-
-[BestClient]
-Radius filter
-== 距离过滤
-
-[BestClient]
-Radius (tiles)
-== 半径（格）
-
-[BestClient]
-Activation mode
-== 激活模式
-
-[BestClient]
-Automatic
-== 自动
-
-[BestClient]
-VAD threshold (%)
-== 语音活动检测阈值 (%)
-
-[BestClient]
-VAD release delay (ms)
-== 语音活动检测释放延迟（毫秒）
-
-[BestClient]
-Mic check (loopback)
-== 麦克风测试（听自己）
-
-[BestClient]
-Mic level
-== 麦克风电平
-
-[BestClient]
-Mic gain
-== 麦克风增益
-
-[BestClient]
-Voice volume
-== 语音音量
-
-[BestClient]
-Microphone
-== 麦克风
-
-[BestClient]
-Headphones
-== 耳机
-
-[BestClient]
 Status
 == 状态
 
 [BestClient]
 Connected
 == 已连接
-
-[BestClient]
-Offline
-== 离线
-
-[BestClient]
-Reload servers
-== 重新加载服务器
-
-[BestClient]
-Available servers
-== 可用服务器
-
-[BestClient]
-Loading server list...
-== 正在加载服务器列表...
-
-[BestClient]
-No servers loaded
-== 未加载服务器
-
-[BestClient]
-Voice commands
-== 语音命令
-
-[BestClient]
-!vmute "name" / !vunmute "name"
-== !vmute "名字" / !vunmute "名字"
-
-[BestClient]
-!volume "name" 0-100
-== !volume "名字" 0-100
-
-[BestClient]
-!vradius on/off/<tiles>
-== !vradius on/off/<格数>
 
 [BestClient]
 Client Indicator
@@ -1455,48 +1319,12 @@ Scoreboard indicator size
 == 记分板标识大小
 
 [BestClient]
-Not connected to voice server
-== 未连接到语音服务器
-
-[BestClient]
-Voice Moderator Login
-== 语音管理员登录
-
-[BestClient]
-Mod key:
-== 管理密钥：
-
-[BestClient]
-Authenticating...
-== 验证中...
-
-[BestClient]
-Wrong key
-== 密钥错误
-
-[BestClient]
-Login as Voice Mod
-== 以语音管理员登录
-
-[BestClient]
-Voice players on this server
-== 此服务器上的语音玩家
-
-[BestClient]
 Refresh
 == 刷新
 
 [BestClient]
-No players in current voice room
-== 当前语音房间没有玩家
-
-[BestClient]
 Action
 == 操作
-
-[BestClient]
-slot %d
-== 槽位 %d
 
 [BestClient]
 Mini games

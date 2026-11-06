@@ -783,8 +783,7 @@ void CMenus::RenderDemoPlayer(CUIRect MainView)
 	ButtonBar.VSplitRight(ButtonbarHeight, &ButtonBar, &Button);
 	static CButtonContainer s_DemoCameraEffectsButton;
 	const bool DemoCameraEffectsPopupOpen = Ui()->IsPopupOpen(&m_DemoCameraEffectsPopupId);
-	const bool DemoCameraEffectsEnabled = g_Config.m_BcCameraDrift || g_Config.m_BcDynamicFov;
-	if(Ui()->DoButton_FontIcon(&s_DemoCameraEffectsButton, FontIcon::GEAR, DemoCameraEffectsPopupOpen || DemoCameraEffectsEnabled, &Button, BUTTONFLAG_LEFT))
+	if(Ui()->DoButton_FontIcon(&s_DemoCameraEffectsButton, FontIcon::GEAR, DemoCameraEffectsPopupOpen, &Button, BUTTONFLAG_LEFT))
 	{
 		if(DemoCameraEffectsPopupOpen)
 		{
@@ -793,14 +792,14 @@ void CMenus::RenderDemoPlayer(CUIRect MainView)
 		else
 		{
 			constexpr float PopupWidth = 320.0f;
-			constexpr float PopupHeight = 310.0f;
+			constexpr float PopupHeight = 100.0f;
 			constexpr float PopupMargin = 5.0f;
 			const float PopupX = std::clamp(Button.x + Button.w - PopupWidth, PopupMargin, std::max(PopupMargin, Ui()->Screen()->w - PopupWidth - PopupMargin));
 			const float PopupY = Button.y >= PopupHeight + PopupMargin ? Button.y - PopupHeight - 2.0f : Button.y + Button.h + 2.0f;
 			Ui()->DoPopupMenu(&m_DemoCameraEffectsPopupId, PopupX, PopupY, PopupWidth, PopupHeight, this, PopupDemoCameraEffects);
 		}
 	}
-	GameClient()->m_Tooltips.DoToolTip(&s_DemoCameraEffectsButton, &Button, Localize("Configure demo camera effects"));
+	GameClient()->m_Tooltips.DoToolTip(&s_DemoCameraEffectsButton, &Button, Localize("Configure demo camera"));
 	// bestclient
 
 	// auto camera button (only available when it is possible to use)
@@ -864,48 +863,13 @@ CUi::EPopupMenuFunctionResult CMenus::PopupDemoCameraEffects(void *pContext, CUI
 
 	constexpr float RowHeight = 20.0f;
 	constexpr float CheckBoxHeight = 18.0f;
-	constexpr float Gap = 6.0f;
 
 	View.Margin(6.0f, &View);
 
 	CUIRect Row;
 	View.HSplitTop(RowHeight, &Row, &View);
-	pMenus->Ui()->DoLabel(&Row, Localize("Demo camera effects"), 14.0f, TEXTALIGN_MC);
+	pMenus->Ui()->DoLabel(&Row, Localize("Demo camera"), 14.0f, TEXTALIGN_MC);
 	View.HSplitTop(4.0f, nullptr, &View);
-
-	View.HSplitTop(CheckBoxHeight, &Row, &View);
-	if(pMenus->DoButton_CheckBox(&g_Config.m_BcCameraDrift, Localize("Camera drift"), g_Config.m_BcCameraDrift, &Row))
-		g_Config.m_BcCameraDrift ^= 1;
-
-	View.HSplitTop(RowHeight, &Row, &View);
-	pMenus->Ui()->DoScrollbarOption(&g_Config.m_BcCameraDriftAmount, &g_Config.m_BcCameraDriftAmount, &Row, Localize("Drift amount"), 1, 200);
-
-	View.HSplitTop(RowHeight, &Row, &View);
-	pMenus->Ui()->DoScrollbarOption(&g_Config.m_BcCameraDriftSmoothness, &g_Config.m_BcCameraDriftSmoothness, &Row, Localize("Drift smoothness"), 1, 20);
-
-	View.HSplitTop(CheckBoxHeight, &Row, &View);
-	if(pMenus->DoButton_CheckBox(&g_Config.m_BcCameraDriftReverse, Localize("Reverse drift direction"), g_Config.m_BcCameraDriftReverse, &Row))
-		g_Config.m_BcCameraDriftReverse ^= 1;
-
-	View.HSplitTop(Gap, nullptr, &View);
-	View.HSplitTop(1.0f, &Row, &View);
-	Row.Draw(ColorRGBA(1.0f, 1.0f, 1.0f, 0.15f), IGraphics::CORNER_NONE, 0.0f);
-	View.HSplitTop(Gap, nullptr, &View);
-
-	View.HSplitTop(CheckBoxHeight, &Row, &View);
-	if(pMenus->DoButton_CheckBox(&g_Config.m_BcDynamicFov, Localize("Dynamic FOV"), g_Config.m_BcDynamicFov, &Row))
-		g_Config.m_BcDynamicFov ^= 1;
-
-	View.HSplitTop(RowHeight, &Row, &View);
-	pMenus->Ui()->DoScrollbarOption(&g_Config.m_BcDynamicFovAmount, &g_Config.m_BcDynamicFovAmount, &Row, Localize("FOV amount"), 1, 200);
-
-	View.HSplitTop(RowHeight, &Row, &View);
-	pMenus->Ui()->DoScrollbarOption(&g_Config.m_BcDynamicFovSmoothness, &g_Config.m_BcDynamicFovSmoothness, &Row, Localize("FOV smoothness"), 1, 100);
-
-	View.HSplitTop(Gap, nullptr, &View);
-	View.HSplitTop(1.0f, &Row, &View);
-	Row.Draw(ColorRGBA(1.0f, 1.0f, 1.0f, 0.15f), IGraphics::CORNER_NONE, 0.0f);
-	View.HSplitTop(Gap, nullptr, &View);
 
 	View.HSplitTop(CheckBoxHeight, &Row, &View);
 	if(pMenus->DoButton_CheckBox(&g_Config.m_BcFreeviewNumpad, Localize("Numpad move (2/4/6/8)"), g_Config.m_BcFreeviewNumpad, &Row))

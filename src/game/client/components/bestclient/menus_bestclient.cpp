@@ -21,9 +21,7 @@
 #include <game/client/components/bestclient/gradient.h>
 #include <game/client/components/bestclient/bestclient.h>
 #include <game/client/components/bestclient/cursor_trail.h>
-#include <game/client/components/bestclient/physicball.h>
 #include <game/client/components/bestclient/media_decoder.h>
-#include <game/client/components/bestclient/menu_media_background.h>
 #include <game/client/components/bestclient/settings_search.h>
 #include <game/client/components/bestclient/ui_theme/style.h>
 #include <game/client/components/bestclient/ui_theme/widgets.h>
@@ -161,7 +159,7 @@ void CMenus::RenderPopupStylePicker(CUIRect Box)
 				s_NewTab = 1;
 			Tabs.HSplitTop(8.0f, nullptr, &Tabs);
 			Tabs.HSplitTop(26.0f, &Row, &Tabs);
-			if(DoButton_MenuTab(&s_NewTabBestClient, BcLocalize("BestClient"), s_NewTab == 2, &Row, IGraphics::CORNER_R, nullptr, nullptr, nullptr, nullptr, 10.0f))
+			if(DoButton_MenuTab(&s_NewTabBestClient, BcLocalize("RequiemClient"), s_NewTab == 2, &Row, IGraphics::CORNER_R, nullptr, nullptr, nullptr, nullptr, 10.0f))
 				s_NewTab = 2;
 		}
 		else
@@ -179,7 +177,7 @@ void CMenus::RenderPopupStylePicker(CUIRect Box)
 				s_LegacyTab = 2;
 			Tabs.HSplitTop(4.0f, nullptr, &Tabs);
 			Tabs.HSplitTop(22.0f, &Row, &Tabs);
-			if(DoButton_MenuTab(&s_LegacyTabBestClient, BcLocalize("BestClient"), s_LegacyTab == 3, &Row, IGraphics::CORNER_R, nullptr, nullptr, nullptr, nullptr, 4.0f))
+			if(DoButton_MenuTab(&s_LegacyTabBestClient, BcLocalize("RequiemClient"), s_LegacyTab == 3, &Row, IGraphics::CORNER_R, nullptr, nullptr, nullptr, nullptr, 4.0f))
 				s_LegacyTab = 3;
 		}
 
@@ -822,12 +820,6 @@ void CMenus::RenderSettingsBestClient(CUIRect MainView)
 	}
 	// bestclient
 
-	if(s_ShowBestClientFun)
-	{
-		RenderSettingsBestClientFun(MainView);
-		return;
-	}
-
 	auto RenderTabContent = [&](int Tab, CUIRect Content) {
 		if(Tab == BESTCLIENT_TAB_VISUALS)
 			RenderSettingsBestClientVisuals(Content);
@@ -985,7 +977,7 @@ void CMenus::RenderSettingsBestClientVisuals(CUIRect MainView)
 	static int s_DiscordRpcApplied = -1;
 	if(s_DiscordRpcApplied < 0)
 		s_DiscordRpcApplied = g_Config.m_BcDiscordRPC;
-	if(DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcDiscordRPC, BcLocalize("Bestclient discord rpc (restart requires)"), &g_Config.m_BcDiscordRPC, &VisualsQoLBlock, LineSize))
+	if(DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcDiscordRPC, BcLocalize("RequiemClient discord rpc (restart requires)"), &g_Config.m_BcDiscordRPC, &VisualsQoLBlock, LineSize))
 		m_NeedRestartDiscord = g_Config.m_BcDiscordRPC != s_DiscordRpcApplied;
 	VisualsQoLBlock.HSplitTop(LineSize, &Button, &VisualsQoLBlock);
 	Ui()->DoScrollbarOption(&g_Config.m_BcWheelScale, &g_Config.m_BcWheelScale, &Button, BcLocalize("Bind/Emote wheel scale"), 50, 100, &CUi::ms_LinearScrollbarScale, CUi::SCROLLBAR_OPTION_DELAYUPDATE, "%");
@@ -993,208 +985,6 @@ void CMenus::RenderSettingsBestClientVisuals(CUIRect MainView)
 	Ui()->DoScrollbarOption(&g_Config.m_BcScoreboardScale, &g_Config.m_BcScoreboardScale, &Button, BcLocalize("Scoreboard scale"), 50, 100, &CUi::ms_LinearScrollbarScale, CUi::SCROLLBAR_OPTION_DELAYUPDATE, "%");
 	VisualsQoLBlock.HSplitTop(LineSize, &Button, &VisualsQoLBlock);
 	Ui()->DoScrollbarOption(&g_Config.m_UiScale, &g_Config.m_UiScale, &Button, BcLocalize("UI scale"), 50, 110, &CUi::ms_LinearScrollbarScale, CUi::SCROLLBAR_OPTION_DELAYUPDATE, "%");
-
-	Column.HSplitTop(MarginBetweenViews, nullptr, &Column);
-
-	const bool JellyExpanded = g_Config.m_BcJellyTee != 0;
-	const float JellyHeaderHeight = LineSize + MarginSmall + LineSize;
-	const float JellyExpandedTargetHeight = MarginSmall + LineSize + MarginSmall + LineSize + MarginSmall + LineSize;
-	const float JellyExpandedHeight = BC_MODULE_REVEAL(JellyExpanded, JellyExpandedTargetHeight, Client()->RenderFrameTime());
-	const float JellyBlockHeight = JellyHeaderHeight + JellyExpandedHeight;
-
-	CUIRect JellyBlock;
-	Column.HSplitTop(JellyBlockHeight, &JellyBlock, &Column);
-
-	CUIRect JellyBlockBg = JellyBlock;
-	JellyBlockBg.w += BlockPadding;
-	JellyBlockBg.h += BlockPadding;
-	JellyBlockBg.x -= BlockPadding * 0.5f;
-	JellyBlockBg.y -= BlockPadding * 0.5f;
-	BestClientUiTheme::DrawUiBlock(&JellyBlockBg, IGraphics::CORNER_ALL, 10.0f);
-	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_BcJellyTee, &JellyBlockBg);
-
-	MainView = JellyBlock;
-
-	MainView.HSplitTop(LineSize, &Label, &MainView);
-	CUIRect JellyTitleLabel, JellyResetButton;
-	Label.VSplitRight(LineSize + 8.0f, &JellyTitleLabel, &JellyResetButton);
-	static CButtonContainer s_JellyTeeResetButton;
-	const bool JellyTeeResetClicked = Ui()->DoButton_FontIcon(&s_JellyTeeResetButton, FontIcon::ARROW_ROTATE_LEFT, 0, &JellyResetButton, BUTTONFLAG_LEFT);
-	GameClient()->m_Tooltips.DoToolTip(&s_JellyTeeResetButton, &JellyResetButton, BcLocalize("Reset to defaults"));
-	if(JellyTeeResetClicked)
-	{
-		g_Config.m_BcJellyTeeOthers = DefaultConfig::BcJellyTeeOthers;
-		g_Config.m_BcJellyTeeStrength = DefaultConfig::BcJellyTeeStrength;
-		g_Config.m_BcJellyTeeDuration = DefaultConfig::BcJellyTeeDuration;
-	}
-	Ui()->DoLabel(&JellyTitleLabel, BcLocalize("Jelly Tee"), HeadlineFontSize, TEXTALIGN_ML);
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-
-	MainView.HSplitTop(LineSize, &Content, &MainView);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcJellyTee, BcLocalize("Enable Jelly Tee"), &g_Config.m_BcJellyTee, &Content, LineSize);
-
-	if(JellyExpandedHeight > 0.5f)
-	{
-		CUIRect Visible = MainView;
-		Visible.h = JellyExpandedHeight;
-		Ui()->ClipEnable(&Visible);
-
-		MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-		MainView.HSplitTop(LineSize, &Content, &MainView);
-		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcJellyTeeOthers, BcLocalize("Jelly Others"), &g_Config.m_BcJellyTeeOthers, &Content, LineSize);
-
-		MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-		MainView.HSplitTop(LineSize, &Button, &MainView);
-		Ui()->DoScrollbarOption(&g_Config.m_BcJellyTeeStrength, &g_Config.m_BcJellyTeeStrength, &Button, BcLocalize("Jelly strength"), 1, 500);
-
-		MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-		MainView.HSplitTop(LineSize, &Button, &MainView);
-		Ui()->DoScrollbarOption(&g_Config.m_BcJellyTeeDuration, &g_Config.m_BcJellyTeeDuration, &Button, BcLocalize("Jelly duration"), 1, 80);
-
-		Ui()->ClipDisable();
-	}
-
-	Column.HSplitTop(MarginBetweenViews, nullptr, &Column);
-
-	RenderSettingsBestClientWeaponGlow(Column);
-
-	Column.HSplitTop(MarginBetweenViews, nullptr, &Column);
-
-	const bool CornerIndicatorEnabled = g_Config.m_BcCornerIndicator != 0;
-	const bool CornerIndicatorBlocked = GameClient()->m_AspectRatio.IsBlockedByFng();
-	const bool CornerIndicatorShowSizes = CornerIndicatorEnabled && g_Config.m_BcCornerIndicatorProximity == 0;
-	const bool CornerIndicatorShowCustomColors = CornerIndicatorEnabled && g_Config.m_BcCornerIndicatorCustomColors != 0;
-	const float CornerIndicatorColorPickerLineSize = 25.0f;
-	const float CornerIndicatorColorPickerSpacing = 5.0f;
-	const float CornerIndicatorExpandedTargetHeight =
-		7.0f * (MarginSmall + LineSize) +
-		(CornerIndicatorShowSizes ? 3.0f * (MarginSmall + LineSize) : 0.0f) +
-		(CornerIndicatorShowCustomColors ? 3.0f * (CornerIndicatorColorPickerSpacing + CornerIndicatorColorPickerLineSize) : 0.0f);
-	const float CornerIndicatorExpandedHeight = BC_MODULE_REVEAL(CornerIndicatorEnabled, CornerIndicatorExpandedTargetHeight, Client()->RenderFrameTime());
-	const float CornerIndicatorBlockedHintHeight = CornerIndicatorBlocked ? (MarginSmall + LineSize) : 0.0f;
-	const float CornerIndicatorBlockHeight = LineSize + MarginSmall + LineSize + CornerIndicatorExpandedHeight + CornerIndicatorBlockedHintHeight;
-	CUIRect CornerIndicatorBlock;
-	Column.HSplitTop(CornerIndicatorBlockHeight, &CornerIndicatorBlock, &Column);
-
-	CUIRect CornerIndicatorBlockBg = CornerIndicatorBlock;
-	CornerIndicatorBlockBg.w += BlockPadding;
-	CornerIndicatorBlockBg.h += BlockPadding;
-	CornerIndicatorBlockBg.x -= BlockPadding * 0.5f;
-	CornerIndicatorBlockBg.y -= BlockPadding * 0.5f;
-	BestClientUiTheme::DrawUiBlock(&CornerIndicatorBlockBg, IGraphics::CORNER_ALL, 10.0f);
-	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_BcCornerIndicator, &CornerIndicatorBlockBg);
-
-	CUIRect CornerIndicatorView = CornerIndicatorBlock;
-	CornerIndicatorView.HSplitTop(LineSize, &Label, &CornerIndicatorView);
-	CUIRect CornerIndicatorTitleLabel, CornerIndicatorResetButton;
-	Label.VSplitRight(LineSize + 8.0f, &CornerIndicatorTitleLabel, &CornerIndicatorResetButton);
-	static CButtonContainer s_CornerIndicatorResetButton;
-	const bool CornerIndicatorResetClicked = Ui()->DoButton_FontIcon(&s_CornerIndicatorResetButton, FontIcon::ARROW_ROTATE_LEFT, 0, &CornerIndicatorResetButton, BUTTONFLAG_LEFT);
-	GameClient()->m_Tooltips.DoToolTip(&s_CornerIndicatorResetButton, &CornerIndicatorResetButton, BcLocalize("Reset to defaults"));
-	if(CornerIndicatorResetClicked)
-	{
-		g_Config.m_BcCornerIndicatorOnlyInTeam = DefaultConfig::BcCornerIndicatorOnlyInTeam;
-		g_Config.m_BcCornerIndicatorShowAlive = DefaultConfig::BcCornerIndicatorShowAlive;
-		g_Config.m_BcCornerIndicatorShowFrozen = DefaultConfig::BcCornerIndicatorShowFrozen;
-		g_Config.m_BcCornerIndicatorIndicateLastTeammate = DefaultConfig::BcCornerIndicatorIndicateLastTeammate;
-		g_Config.m_BcCornerIndicatorProximity = DefaultConfig::BcCornerIndicatorProximity;
-		g_Config.m_BcCornerIndicatorProximityRange = DefaultConfig::BcCornerIndicatorProximityRange;
-		g_Config.m_BcCornerIndicatorProximityMinSize = DefaultConfig::BcCornerIndicatorProximityMinSize;
-		g_Config.m_BcCornerIndicatorNinjaFrozen = DefaultConfig::BcCornerIndicatorNinjaFrozen;
-		g_Config.m_BcCornerIndicatorSizeAlive = DefaultConfig::BcCornerIndicatorSizeAlive;
-		g_Config.m_BcCornerIndicatorSizeFrozen = DefaultConfig::BcCornerIndicatorSizeFrozen;
-		g_Config.m_BcCornerIndicatorLastTeammateSize = DefaultConfig::BcCornerIndicatorLastTeammateSize;
-		g_Config.m_BcCornerIndicatorCustomColors = DefaultConfig::BcCornerIndicatorCustomColors;
-		g_Config.m_BcCornerIndicatorColorAlive = DefaultConfig::BcCornerIndicatorColorAlive;
-		g_Config.m_BcCornerIndicatorColorFrozen = DefaultConfig::BcCornerIndicatorColorFrozen;
-		g_Config.m_BcCornerIndicatorLastTeammateColor = DefaultConfig::BcCornerIndicatorLastTeammateColor;
-	}
-	CUIRect CornerIndicatorAuthorBadge;
-	static CButtonContainer s_CornerIndicatorAuthorBadge;
-	CornerIndicatorTitleLabel.VSplitRight(6.0f, &CornerIndicatorTitleLabel, nullptr);
-	BcMenuBadges::DrawAuthor(Graphics(), Ui(), TextRender(), &CornerIndicatorTitleLabel, 4.0f, &CornerIndicatorAuthorBadge);
-	Ui()->DoButtonLogic(&s_CornerIndicatorAuthorBadge, 0, &CornerIndicatorAuthorBadge, BUTTONFLAG_NONE);
-	GameClient()->m_Tooltips.DoToolTip(&s_CornerIndicatorAuthorBadge, &CornerIndicatorAuthorBadge, "blanc");
-	GameClient()->m_Tooltips.SetFadeTime(&s_CornerIndicatorAuthorBadge, 0.0f);
-	Ui()->DoLabel(&CornerIndicatorTitleLabel, BcLocalize("Corner indicator"), HeadlineFontSize, TEXTALIGN_ML);
-	CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-
-	CornerIndicatorView.HSplitTop(LineSize, &Content, &CornerIndicatorView);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcCornerIndicator, BcLocalize("Enable corner indicator"), &g_Config.m_BcCornerIndicator, &Content, LineSize);
-
-	if(CornerIndicatorExpandedHeight > 0.5f)
-	{
-		CUIRect Visible = CornerIndicatorView;
-		Visible.h = CornerIndicatorExpandedHeight;
-		Ui()->ClipEnable(&Visible);
-
-		CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-		CornerIndicatorView.HSplitTop(LineSize, &Content, &CornerIndicatorView);
-		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcCornerIndicatorOnlyInTeam, BcLocalize("Only in team"), &g_Config.m_BcCornerIndicatorOnlyInTeam, &Content, LineSize);
-
-		CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-		CornerIndicatorView.HSplitTop(LineSize, &Content, &CornerIndicatorView);
-		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcCornerIndicatorShowAlive, BcLocalize("Show alive teammates"), &g_Config.m_BcCornerIndicatorShowAlive, &Content, LineSize);
-
-		CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-		CornerIndicatorView.HSplitTop(LineSize, &Content, &CornerIndicatorView);
-		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcCornerIndicatorShowFrozen, BcLocalize("Show frozen teammates"), &g_Config.m_BcCornerIndicatorShowFrozen, &Content, LineSize);
-
-		CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-		CornerIndicatorView.HSplitTop(LineSize, &Content, &CornerIndicatorView);
-		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcCornerIndicatorIndicateLastTeammate, BcLocalize("Indicate last teammate"), &g_Config.m_BcCornerIndicatorIndicateLastTeammate, &Content, LineSize);
-
-		CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-		CornerIndicatorView.HSplitTop(LineSize, &Content, &CornerIndicatorView);
-		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcCornerIndicatorProximity, BcLocalize("Scale by distance"), &g_Config.m_BcCornerIndicatorProximity, &Content, LineSize);
-
-		CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-		CornerIndicatorView.HSplitTop(LineSize, &Content, &CornerIndicatorView);
-		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcCornerIndicatorNinjaFrozen, BcLocalize("Ninja skin when frozen"), &g_Config.m_BcCornerIndicatorNinjaFrozen, &Content, LineSize);
-
-		if(CornerIndicatorShowSizes)
-		{
-			CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-			CornerIndicatorView.HSplitTop(LineSize, &Button, &CornerIndicatorView);
-			Ui()->DoScrollbarOption(&g_Config.m_BcCornerIndicatorSizeAlive, &g_Config.m_BcCornerIndicatorSizeAlive, &Button, BcLocalize("Alive size"), 12, 128);
-
-			CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-			CornerIndicatorView.HSplitTop(LineSize, &Button, &CornerIndicatorView);
-			Ui()->DoScrollbarOption(&g_Config.m_BcCornerIndicatorSizeFrozen, &g_Config.m_BcCornerIndicatorSizeFrozen, &Button, BcLocalize("Frozen size"), 12, 128);
-
-			CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-			CornerIndicatorView.HSplitTop(LineSize, &Button, &CornerIndicatorView);
-			Ui()->DoScrollbarOption(&g_Config.m_BcCornerIndicatorLastTeammateSize, &g_Config.m_BcCornerIndicatorLastTeammateSize, &Button, BcLocalize("Last teammate size"), 12, 128);
-		}
-
-		CornerIndicatorView.HSplitTop(MarginSmall, nullptr, &CornerIndicatorView);
-		CornerIndicatorView.HSplitTop(LineSize, &Content, &CornerIndicatorView);
-		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcCornerIndicatorCustomColors, BcLocalize("Use custom colors"), &g_Config.m_BcCornerIndicatorCustomColors, &Content, LineSize);
-
-		if(CornerIndicatorShowCustomColors)
-		{
-			static CButtonContainer s_CornerIndicatorColorAliveButton;
-			static CButtonContainer s_CornerIndicatorColorFrozenButton;
-			static CButtonContainer s_CornerIndicatorLastTeammateColorButton;
-			DoLine_ColorPicker(&s_CornerIndicatorColorAliveButton, CornerIndicatorColorPickerLineSize, 13.0f, CornerIndicatorColorPickerSpacing, &CornerIndicatorView, BcLocalize("Alive color"), &g_Config.m_BcCornerIndicatorColorAlive, color_cast<ColorRGBA>(ColorHSLA(DefaultConfig::BcCornerIndicatorColorAlive, true)), false, nullptr, true);
-			DoLine_ColorPicker(&s_CornerIndicatorColorFrozenButton, CornerIndicatorColorPickerLineSize, 13.0f, CornerIndicatorColorPickerSpacing, &CornerIndicatorView, BcLocalize("Frozen color"), &g_Config.m_BcCornerIndicatorColorFrozen, color_cast<ColorRGBA>(ColorHSLA(DefaultConfig::BcCornerIndicatorColorFrozen, true)), false, nullptr, true);
-			DoLine_ColorPicker(&s_CornerIndicatorLastTeammateColorButton, CornerIndicatorColorPickerLineSize, 13.0f, CornerIndicatorColorPickerSpacing, &CornerIndicatorView, BcLocalize("Last teammate color"), &g_Config.m_BcCornerIndicatorLastTeammateColor, color_cast<ColorRGBA>(ColorHSLA(DefaultConfig::BcCornerIndicatorLastTeammateColor, true)), false, nullptr, true);
-		}
-
-		Ui()->ClipDisable();
-	}
-
-	if(CornerIndicatorBlocked)
-	{
-		CUIRect HintArea, HintRow;
-		CUIRect BlockForHint = CornerIndicatorBlock;
-		BlockForHint.HSplitBottom(CornerIndicatorBlockedHintHeight, nullptr, &HintArea);
-		HintArea.HSplitTop(MarginSmall, nullptr, &HintRow);
-		HintRow.h = LineSize;
-		TextRender()->TextColor(1.0f, 0.4f, 0.4f, 1.0f);
-		Ui()->DoLabel(&HintRow, BcLocalize("Looks like you're on a server where this feature is forbidden"), 14.0f, TEXTALIGN_ML);
-		TextRender()->TextColor(TextRender()->DefaultTextColor());
-	}
 
 	Column.HSplitTop(MarginBetweenViews, nullptr, &Column);
 
@@ -1517,283 +1307,6 @@ void CMenus::RenderSettingsBestClientVisuals(CUIRect MainView)
 
 		Ui()->ClipDisable();
 	}
-
-	Column.HSplitTop(MarginBetweenViews, nullptr, &Column);
-
-	const float Particles3DColorPickerLineSize = 25.0f;
-	const float Particles3DColorPickerLabelSize = 13.0f;
-	const float Particles3DColorPickerSpacing = 5.0f;
-	const bool Particles3DEnabled = g_Config.m_Bc3dParticles != 0;
-	const bool Particles3DShowCustomColor = Particles3DEnabled && g_Config.m_Bc3dParticlesColorMode == 1;
-	const float Particles3DExpandedTargetHeight =
-		(MarginSmall + LineSize) * 5.0f + (Particles3DShowCustomColor ? MarginSmall + Particles3DColorPickerLineSize + Particles3DColorPickerSpacing : 0.0f);
-	const float Particles3DExpandedHeight = BC_MODULE_REVEAL(Particles3DEnabled, Particles3DExpandedTargetHeight, Client()->RenderFrameTime());
-	const float Particles3DContentHeight = LineSize + MarginSmall + LineSize + Particles3DExpandedHeight;
-
-	CUIRect Particles3DBlock;
-	Column.HSplitTop(Particles3DContentHeight, &Particles3DBlock, &Column);
-
-	CUIRect Particles3DBlockBg = Particles3DBlock;
-	Particles3DBlockBg.w += BlockPadding;
-	Particles3DBlockBg.h += BlockPadding;
-	Particles3DBlockBg.x -= BlockPadding * 0.5f;
-	Particles3DBlockBg.y -= BlockPadding * 0.5f;
-	BestClientUiTheme::DrawUiBlock(&Particles3DBlockBg, IGraphics::CORNER_ALL, 10.0f);
-	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_Bc3dParticles, &Particles3DBlockBg);
-
-	MainView = Particles3DBlock;
-
-	MainView.HSplitTop(LineSize, &Label, &MainView);
-	CUIRect Particles3DTitleLabel, Particles3DResetButton;
-	Label.VSplitRight(LineSize + 8.0f, &Particles3DTitleLabel, &Particles3DResetButton);
-	static CButtonContainer s_3DParticlesResetButton;
-	if(Ui()->DoButton_FontIcon(&s_3DParticlesResetButton, FontIcon::ARROW_ROTATE_LEFT, 0, &Particles3DResetButton, BUTTONFLAG_LEFT))
-	{
-		g_Config.m_Bc3dParticlesType = DefaultConfig::Bc3dParticlesType;
-		g_Config.m_Bc3dParticlesDensity = DefaultConfig::Bc3dParticlesDensity;
-		g_Config.m_Bc3dParticlesSizeMax = DefaultConfig::Bc3dParticlesSizeMax;
-		g_Config.m_Bc3dParticlesSpeed = DefaultConfig::Bc3dParticlesSpeed;
-		g_Config.m_Bc3dParticlesDepth = DefaultConfig::Bc3dParticlesDepth;
-		g_Config.m_Bc3dParticlesAlpha = DefaultConfig::Bc3dParticlesAlpha;
-		g_Config.m_Bc3dParticlesPushRadius = DefaultConfig::Bc3dParticlesPushRadius;
-		g_Config.m_Bc3dParticlesPushStrength = DefaultConfig::Bc3dParticlesPushStrength;
-		g_Config.m_Bc3dParticlesCollide = DefaultConfig::Bc3dParticlesCollide;
-		g_Config.m_Bc3dParticlesViewMargin = DefaultConfig::Bc3dParticlesViewMargin;
-		g_Config.m_Bc3dParticlesColorMode = DefaultConfig::Bc3dParticlesColorMode;
-		g_Config.m_Bc3dParticlesColor = DefaultConfig::Bc3dParticlesColor;
-		g_Config.m_Bc3dParticlesGlow = DefaultConfig::Bc3dParticlesGlow;
-	}
-	GameClient()->m_Tooltips.DoToolTip(&s_3DParticlesResetButton, &Particles3DResetButton, BcLocalize("Reset to defaults"));
-	Ui()->DoLabel(&Particles3DTitleLabel, BcLocalize("3D Particles"), HeadlineFontSize, TEXTALIGN_ML);
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-
-	MainView.HSplitTop(LineSize, &Content, &MainView);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_Bc3dParticles, BcLocalize("Enable 3D Particles"), &g_Config.m_Bc3dParticles, &Content, LineSize);
-
-	if(Particles3DExpandedHeight > 0.5f)
-	{
-		CUIRect Visible = MainView;
-		Visible.h = Particles3DExpandedHeight;
-		Ui()->ClipEnable(&Visible);
-
-		MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-		MainView.HSplitTop(LineSize, &Button, &MainView);
-		Ui()->DoScrollbarOption(&g_Config.m_Bc3dParticlesDensity, &g_Config.m_Bc3dParticlesDensity, &Button, BcLocalize("Density"), 1, 600);
-
-		MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-		MainView.HSplitTop(LineSize, &Button, &MainView);
-		CUIRect Particles3DTypeLabel, Particles3DTypeSelect;
-		Button.VSplitLeft(150.0f, &Particles3DTypeLabel, &Particles3DTypeSelect);
-		Ui()->DoLabel(&Particles3DTypeLabel, BcLocalize("Particle type"), 14.0f, TEXTALIGN_ML);
-
-		static CUi::SDropDownState s_3DParticlesTypeState;
-		static CScrollRegion s_3DParticlesTypeScrollRegion;
-		s_3DParticlesTypeState.m_SelectionPopupContext.m_pScrollRegion = &s_3DParticlesTypeScrollRegion;
-		const char *Ap3DParticleTypes[3] = {
-			BcLocalize("Cube"),
-			BcLocalize("Heart"),
-			BcLocalize("Mixed"),
-		};
-		g_Config.m_Bc3dParticlesType = Ui()->DoDropDown(&Particles3DTypeSelect, g_Config.m_Bc3dParticlesType - 1, Ap3DParticleTypes, (int)std::size(Ap3DParticleTypes), s_3DParticlesTypeState) + 1;
-
-		MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-		MainView.HSplitTop(LineSize, &Button, &MainView);
-		Ui()->DoScrollbarOption(&g_Config.m_Bc3dParticlesSizeMax, &g_Config.m_Bc3dParticlesSizeMax, &Button, BcLocalize("Size"), 2, 200);
-
-		MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-		MainView.HSplitTop(LineSize, &Button, &MainView);
-		CUIRect Particles3DColorModeLabel, Particles3DColorModeSelect;
-		Button.VSplitLeft(150.0f, &Particles3DColorModeLabel, &Particles3DColorModeSelect);
-		Ui()->DoLabel(&Particles3DColorModeLabel, BcLocalize("Color mode"), 14.0f, TEXTALIGN_ML);
-
-		static CUi::SDropDownState s_3DParticlesColorModeState;
-		static CScrollRegion s_3DParticlesColorModeScrollRegion;
-		s_3DParticlesColorModeState.m_SelectionPopupContext.m_pScrollRegion = &s_3DParticlesColorModeScrollRegion;
-		const char *Ap3DParticleColorModes[2] = {
-			BcLocalize("Custom"),
-			BcLocalize("Random"),
-		};
-		g_Config.m_Bc3dParticlesColorMode = Ui()->DoDropDown(&Particles3DColorModeSelect, g_Config.m_Bc3dParticlesColorMode - 1, Ap3DParticleColorModes, (int)std::size(Ap3DParticleColorModes), s_3DParticlesColorModeState) + 1;
-
-		if(Particles3DShowCustomColor)
-		{
-			static CButtonContainer s_3DParticlesColorButton;
-			MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-			DoLine_ColorPicker(&s_3DParticlesColorButton, Particles3DColorPickerLineSize, Particles3DColorPickerLabelSize, Particles3DColorPickerSpacing, &MainView, BcLocalize("Color"), &g_Config.m_Bc3dParticlesColor, ColorRGBA(1.0f, 1.0f, 1.0f), false);
-		}
-
-		MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-		MainView.HSplitTop(LineSize, &Content, &MainView);
-		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_Bc3dParticlesGlow, BcLocalize("Glow"), &g_Config.m_Bc3dParticlesGlow, &Content, LineSize);
-
-		Ui()->ClipDisable();
-	}
-
-	Column.HSplitTop(MarginBetweenViews, nullptr, &Column);
-
-	const float MediaBackgroundBlockHeight = LineSize + MarginSmall + LineSize + MarginSmall + LineSize + MarginSmall + LineSize + MarginSmall + LineSize + MarginSmall + LineSize;
-
-	CUIRect MediaBackgroundBlock;
-	Column.HSplitTop(MediaBackgroundBlockHeight, &MediaBackgroundBlock, &Column);
-
-	CUIRect MediaBackgroundBlockBg = MediaBackgroundBlock;
-	MediaBackgroundBlockBg.w += BlockPadding;
-	MediaBackgroundBlockBg.h += BlockPadding;
-	MediaBackgroundBlockBg.x -= BlockPadding * 0.5f;
-	MediaBackgroundBlockBg.y -= BlockPadding * 0.5f;
-	BestClientUiTheme::DrawUiBlock(&MediaBackgroundBlockBg, IGraphics::CORNER_ALL, 10.0f);
-	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_BcMenuMediaBackground, &MediaBackgroundBlockBg);
-
-	MainView = MediaBackgroundBlock;
-
-	MainView.HSplitTop(LineSize, &Label, &MainView);
-	Ui()->DoLabel(&Label, BcLocalize("Media Background"), HeadlineFontSize, TEXTALIGN_ML);
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-
-	MainView.HSplitTop(LineSize, &Content, &MainView);
-	const bool MenuMediaChanged = DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcMenuMediaBackground, BcLocalize("Enable to main menu"), &g_Config.m_BcMenuMediaBackground, &Content, LineSize);
-
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-	MainView.HSplitTop(LineSize, &Content, &MainView);
-	const bool GameMediaChanged = DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcGameMediaBackground, BcLocalize("Enable to game background"), &g_Config.m_BcGameMediaBackground, &Content, LineSize);
-
-	auto ReloadMenuMediaFromConfig = [&]() {
-		CMenuMediaBackground &MediaBackground = GameClient()->m_BestClient.MenuMediaBackground();
-		const bool MediaStatusInGame = Client()->State() == IClient::STATE_ONLINE || Client()->State() == IClient::STATE_DEMOPLAYBACK;
-		if(MediaStatusInGame)
-			MediaBackground.ReloadFromConfig(g_Config.m_BcGameMediaBackground, g_Config.m_BcMenuMediaBackgroundPath);
-		else
-			MediaBackground.ReloadFromConfig(g_Config.m_BcMenuMediaBackground, g_Config.m_BcMenuMediaBackgroundPath);
-	};
-
-	if(MenuMediaChanged || GameMediaChanged)
-		ReloadMenuMediaFromConfig();
-
-	struct SMenuMediaFileListContext
-	{
-		std::vector<std::string> *m_pLabels;
-		std::vector<std::string> *m_pPaths;
-	};
-
-	auto MenuMediaFileListScan = [](const char *pName, int IsDir, int StorageType, void *pUser) {
-		(void)StorageType;
-		if(IsDir)
-			return 0;
-
-		auto *pContext = static_cast<SMenuMediaFileListContext *>(pUser);
-		const std::string Ext = MediaDecoder::ExtractExtensionLower(pName);
-		const bool SupportedImage = Ext == "png" || Ext == "jpg" || Ext == "jpeg" || Ext == "webp" || Ext == "bmp" || Ext == "avif" || Ext == "gif";
-		const bool SupportedVideo = Ext == "mp4" || Ext == "webm" || Ext == "mov" || Ext == "m4v" || Ext == "mkv" || Ext == "avi";
-		if(!SupportedImage && !SupportedVideo)
-			return 0;
-
-		pContext->m_pLabels->emplace_back(pName);
-		pContext->m_pPaths->emplace_back(std::string("BestClient/backgrounds/") + pName);
-		return 0;
-	};
-
-	Storage()->CreateFolder("BestClient", IStorage::TYPE_SAVE);
-	Storage()->CreateFolder("BestClient/backgrounds", IStorage::TYPE_SAVE);
-
-	static std::vector<std::string> s_vMenuMediaFileLabels;
-	static std::vector<std::string> s_vMenuMediaFilePaths;
-	s_vMenuMediaFileLabels.clear();
-	s_vMenuMediaFilePaths.clear();
-	SMenuMediaFileListContext MenuMediaContext{&s_vMenuMediaFileLabels, &s_vMenuMediaFilePaths};
-	Storage()->ListDirectory(IStorage::TYPE_SAVE, "BestClient/backgrounds", MenuMediaFileListScan, &MenuMediaContext);
-
-	std::vector<int> vSortedIndices(s_vMenuMediaFileLabels.size());
-	for(size_t i = 0; i < vSortedIndices.size(); ++i)
-		vSortedIndices[i] = (int)i;
-	std::sort(vSortedIndices.begin(), vSortedIndices.end(), [&](int Left, int Right) {
-		return str_comp_nocase(s_vMenuMediaFileLabels[Left].c_str(), s_vMenuMediaFileLabels[Right].c_str()) < 0;
-	});
-
-	static std::vector<std::string> s_vMenuMediaDropDownLabels;
-	static std::vector<const char *> s_vMenuMediaDropDownLabelPtrs;
-	s_vMenuMediaDropDownLabels.clear();
-	s_vMenuMediaDropDownLabelPtrs.clear();
-	for(int SortedIndex : vSortedIndices)
-		s_vMenuMediaDropDownLabels.push_back(s_vMenuMediaFileLabels[SortedIndex]);
-	for(const std::string &LabelString : s_vMenuMediaDropDownLabels)
-		s_vMenuMediaDropDownLabelPtrs.push_back(LabelString.c_str());
-
-	int SelectedMediaFile = -1;
-	for(size_t i = 0; i < vSortedIndices.size(); ++i)
-	{
-		const int SortedIndex = vSortedIndices[i];
-		if(str_comp(g_Config.m_BcMenuMediaBackgroundPath, s_vMenuMediaFilePaths[SortedIndex].c_str()) == 0)
-		{
-			SelectedMediaFile = (int)i;
-			break;
-		}
-	}
-
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-	CUIRect MediaPathRow, MediaFileDropDown, MediaReloadButton, MediaFolderButton;
-	MainView.HSplitTop(LineSize, &MediaPathRow, &MainView);
-	MediaPathRow.VSplitRight(20.0f, &MediaPathRow, &MediaFolderButton);
-	MediaPathRow.VSplitRight(MarginSmall, &MediaPathRow, nullptr);
-	MediaPathRow.VSplitRight(20.0f, &MediaPathRow, &MediaReloadButton);
-	MediaPathRow.VSplitRight(MarginSmall, &MediaPathRow, nullptr);
-	MediaFileDropDown = MediaPathRow;
-
-	if(s_vMenuMediaDropDownLabelPtrs.empty())
-	{
-		static CButtonContainer s_MenuMediaEmptyButton;
-		DoButton_Menu(&s_MenuMediaEmptyButton, BcLocalize("No media files in backgrounds folder"), -1, &MediaFileDropDown);
-	}
-	else
-	{
-		static CUi::SDropDownState s_MenuMediaFileDropDownState;
-		static CScrollRegion s_MenuMediaFileDropDownScrollRegion;
-		s_MenuMediaFileDropDownState.m_SelectionPopupContext.m_pScrollRegion = &s_MenuMediaFileDropDownScrollRegion;
-		const int NewSelectedMediaFile = Ui()->DoDropDown(&MediaFileDropDown, SelectedMediaFile, s_vMenuMediaDropDownLabelPtrs.data(), s_vMenuMediaDropDownLabelPtrs.size(), s_MenuMediaFileDropDownState);
-		if(NewSelectedMediaFile != SelectedMediaFile && NewSelectedMediaFile >= 0 && NewSelectedMediaFile < (int)vSortedIndices.size())
-		{
-			const int SortedIndex = vSortedIndices[NewSelectedMediaFile];
-			str_copy(g_Config.m_BcMenuMediaBackgroundPath, s_vMenuMediaFilePaths[SortedIndex].c_str(), sizeof(g_Config.m_BcMenuMediaBackgroundPath));
-			ReloadMenuMediaFromConfig();
-		}
-	}
-
-	static CButtonContainer s_MenuMediaReloadButton;
-	if(Ui()->DoButton_FontIcon(&s_MenuMediaReloadButton, FontIcon::ARROW_ROTATE_RIGHT, 0, &MediaReloadButton, BUTTONFLAG_LEFT))
-		ReloadMenuMediaFromConfig();
-
-	static CButtonContainer s_MenuMediaFolderButton;
-	if(Ui()->DoButton_FontIcon(&s_MenuMediaFolderButton, FontIcon::FOLDER, 0, &MediaFolderButton, BUTTONFLAG_LEFT))
-	{
-		Storage()->CreateFolder("BestClient", IStorage::TYPE_SAVE);
-		Storage()->CreateFolder("BestClient/backgrounds", IStorage::TYPE_SAVE);
-		char aBuf[IO_MAX_PATH_LENGTH];
-		Storage()->GetCompletePath(IStorage::TYPE_SAVE, "BestClient/backgrounds", aBuf, sizeof(aBuf));
-		Client()->ViewFile(aBuf);
-	}
-
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-	MainView.HSplitTop(LineSize, &Button, &MainView);
-	Ui()->DoScrollbarOption(&g_Config.m_BcGameMediaBackgroundOffset, &g_Config.m_BcGameMediaBackgroundOffset, &Button, BcLocalize("Map offset"), 0, 100, &CUi::ms_LinearScrollbarScale, 0u, "%");
-	GameClient()->m_Tooltips.DoToolTip(&g_Config.m_BcGameMediaBackgroundOffset, &Button, BcLocalize("0 keeps the image fixed to the screen. Higher values add camera parallax. Move the camera to see the effect."));
-
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-	MainView.HSplitTop(LineSize, &Button, &MainView);
-	const bool MediaStatusInGame = Client()->State() == IClient::STATE_ONLINE || Client()->State() == IClient::STATE_DEMOPLAYBACK;
-	const CMenuMediaBackground &MediaStatusSource = GameClient()->m_BestClient.MenuMediaBackground();
-	const char *pMediaStatusText = MediaStatusSource.StatusText();
-	char aMediaStatusBuf[256];
-	if(MediaStatusInGame && MediaStatusSource.IsLoaded() && g_Config.m_BcGameMediaBackground && g_Config.m_ClOverlayEntities == 0)
-	{
-		str_format(aMediaStatusBuf, sizeof(aMediaStatusBuf), "%s %s", pMediaStatusText, BcLocalize("Hidden: overlay entities is 0."));
-		pMediaStatusText = aMediaStatusBuf;
-		TextRender()->TextColor(ColorRGBA(1.0f, 0.85f, 0.45f, 1.0f));
-	}
-	else if(MediaStatusSource.HasError())
-		TextRender()->TextColor(ColorRGBA(1.0f, 0.45f, 0.45f, 1.0f));
-	else if(MediaStatusSource.IsLoaded())
-		TextRender()->TextColor(ColorRGBA(0.55f, 1.0f, 0.55f, 1.0f));
-	Ui()->DoLabel(&Button, pMediaStatusText, 11.0f, TEXTALIGN_ML);
-	TextRender()->TextColor(TextRender()->DefaultTextColor());
 
 	Column.HSplitTop(MarginBetweenViews, nullptr, &Column);
 
@@ -2329,8 +1842,6 @@ void CMenus::RenderSettingsBestClientVisuals(CUIRect MainView)
 	}
 
 	RightColumn.HSplitTop(MarginBetweenViews, nullptr, &RightColumn);
-
-	RenderSettingsBestClientFx(RightColumn, true);
 
 	const bool MotionBlurExpanded = g_Config.m_BcMotionBlur != 0;
 	const float MotionBlurExpandedTargetHeight = MarginSmall + LineSize;
@@ -3045,76 +2556,6 @@ void CMenus::RenderSettingsBestClientVisuals(CUIRect MainView)
 
 	RightColumn.HSplitTop(MarginBetweenViews, nullptr, &RightColumn);
 
-	const float PhysicBallsBlockHeight = LineSize + MarginSmall + LineSize + MarginSmall + LineSize + MarginSmall + LineSize + MarginSmall + 25.0f;
-	CUIRect PhysicBallsBlock;
-	RightColumn.HSplitTop(PhysicBallsBlockHeight, &PhysicBallsBlock, &RightColumn);
-
-	CUIRect PhysicBallsBlockBg = PhysicBallsBlock;
-	PhysicBallsBlockBg.w += BlockPadding;
-	PhysicBallsBlockBg.h += BlockPadding;
-	PhysicBallsBlockBg.x -= BlockPadding * 0.5f;
-	PhysicBallsBlockBg.y -= BlockPadding * 0.5f;
-	BestClientUiTheme::DrawUiBlock(&PhysicBallsBlockBg, IGraphics::CORNER_ALL, 10.0f);
-	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_BcPhysicBallsSpawnCount, &PhysicBallsBlockBg);
-
-	MainView = PhysicBallsBlock;
-	MainView.HSplitTop(LineSize, &Label, &MainView);
-	CUIRect PhysicBallsTitleLabel = Label;
-	PhysicBallsTitleLabel.VSplitRight(MarginSmall, &PhysicBallsTitleLabel, nullptr);
-	BcMenuBadges::DrawEClient(Graphics(), Ui(), TextRender(), &PhysicBallsTitleLabel, MarginSmall);
-	Ui()->DoLabel(&PhysicBallsTitleLabel, BcLocalize("Physic Balls"), HeadlineFontSize, TEXTALIGN_ML);
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-
-	MainView.HSplitTop(LineSize, &Button, &MainView);
-	char aBallAmount[64];
-	str_format(aBallAmount, sizeof(aBallAmount), BcLocalize("Ball amount: %d"), (int)GameClient()->m_PhysicBalls.GetBallCount());
-	CUIRect BallAmountLabel, ClearBallsButton;
-	Button.VSplitRight(LineSize + 8.0f, &BallAmountLabel, &ClearBallsButton);
-	Ui()->DoLabel(&BallAmountLabel, aBallAmount, 14.0f, TEXTALIGN_ML);
-	static CButtonContainer s_ClearPhysicBallsButton;
-	if(Ui()->DoButton_FontIcon(&s_ClearPhysicBallsButton, FontIcon::TRASH, 0, &ClearBallsButton, BUTTONFLAG_LEFT))
-		GameClient()->m_PhysicBalls.OnReset();
-	GameClient()->m_Tooltips.DoToolTip(&s_ClearPhysicBallsButton, &ClearBallsButton, BcLocalize("Clear all balls"));
-
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-	MainView.HSplitTop(LineSize, &Button, &MainView);
-	{
-		static CLineInput s_PhysicBallsSkinInput;
-		s_PhysicBallsSkinInput.SetBuffer(g_Config.m_BcPhysicBallsSkin, sizeof(g_Config.m_BcPhysicBallsSkin));
-		s_PhysicBallsSkinInput.SetEmptyText("volleyball");
-		CUIRect SkinLabel, SkinField;
-		Button.VSplitLeft(70.0f, &SkinLabel, &Button);
-		Button.VSplitLeft(MarginSmall, nullptr, &Button);
-		Button.VSplitLeft(140.0f, &SkinField, nullptr);
-		Ui()->DoLabel(&SkinLabel, BcLocalize("Ball skin"), 14.0f, TEXTALIGN_ML);
-		Ui()->DoEditBox(&s_PhysicBallsSkinInput, &SkinField, 14.0f);
-	}
-
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-	MainView.HSplitTop(LineSize, &Button, &MainView);
-	Ui()->DoScrollbarOption(&g_Config.m_BcPhysicBallsSpawnCount, &g_Config.m_BcPhysicBallsSpawnCount, &Button, BcLocalize("Spawn count"), 1, 50);
-
-	MainView.HSplitTop(MarginSmall, nullptr, &MainView);
-	MainView.HSplitTop(25.0f, &Button, &MainView);
-	CUIRect SpawnBallButton, SpawnCursorButton;
-	Button.VSplitLeft(110.0f, &SpawnBallButton, &Button);
-	Button.VSplitLeft(MarginSmall, nullptr, &Button);
-	Button.VSplitLeft(130.0f, &SpawnCursorButton, nullptr);
-	static CButtonContainer s_SpawnPhysicBallButton;
-	static CButtonContainer s_SpawnPhysicBallCursorButton;
-	const ColorRGBA PhysicBallButtonColor = ColorRGBA(1.0f, 1.0f, 1.0f, 0.5f);
-	const int PhysicBallsSpawnCount = std::clamp(g_Config.m_BcPhysicBallsSpawnCount, 1, 50);
-	if(DoButton_Menu(&s_SpawnPhysicBallButton, BcLocalize("New Ball"), 0, &SpawnBallButton, BUTTONFLAG_LEFT, nullptr, IGraphics::CORNER_ALL, 5.0f, 0.0f, PhysicBallButtonColor))
-	{
-		for(int i = 0; i < PhysicBallsSpawnCount; i++)
-			GameClient()->m_PhysicBalls.NewBallPlayer(60.0f);
-	}
-	if(DoButton_Menu(&s_SpawnPhysicBallCursorButton, BcLocalize("New Ball Cursor"), 0, &SpawnCursorButton, BUTTONFLAG_LEFT, nullptr, IGraphics::CORNER_ALL, 5.0f, 0.0f, PhysicBallButtonColor))
-	{
-		for(int i = 0; i < PhysicBallsSpawnCount; i++)
-			GameClient()->m_PhysicBalls.NewBallCursor(60.0f);
-	}
-
 	const float RightColumnEndY = RightColumn.y;
 	CUIRect VisualsScrollContentRect;
 	VisualsScrollContentRect.x = VisualsScrollContentX;
@@ -3744,6 +3185,7 @@ void CMenus::RenderSettingsBestClientGameplay(CUIRect MainView)
 			g_Config.m_TcEgoTilesAntiLag ^= 1;
 	}
 
+
 	RightColumn.HSplitTop(MarginBetweenViews, nullptr, &RightColumn);
 
 	const bool FastActionsExpanded = g_Config.m_BcFastActions != 0;
@@ -4009,55 +3451,6 @@ void CMenus::RenderSettingsBestClientGameplay(CUIRect MainView)
 
 	RightColumn.HSplitTop(MarginBetweenViews, nullptr, &RightColumn);
 
-	const float EdgeInfoColorPickerLineSize = 25.0f;
-	const float EdgeInfoBlockHeight = LineSize + MarginSmall + LineSize + MarginSmall + 2.0f * (LineSize + MarginSmall) + 3.0f * (EdgeInfoColorPickerLineSize + MarginSmall);
-	CUIRect EdgeInfoBlock;
-	RightColumn.HSplitTop(EdgeInfoBlockHeight, &EdgeInfoBlock, &RightColumn);
-
-	CUIRect EdgeInfoBlockBg = EdgeInfoBlock;
-	EdgeInfoBlockBg.w += BlockPadding;
-	EdgeInfoBlockBg.h += BlockPadding;
-	EdgeInfoBlockBg.x -= BlockPadding * 0.5f;
-	EdgeInfoBlockBg.y -= BlockPadding * 0.5f;
-	BestClientUiTheme::DrawUiBlock(&EdgeInfoBlockBg, IGraphics::CORNER_ALL, 10.0f);
-	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_RiEdgeInfoCords, &EdgeInfoBlockBg);
-
-	EdgeInfoBlock.HSplitTop(LineSize, &Label, &EdgeInfoBlock);
-	CUIRect EdgeInfoTitleLabel, EdgeInfoHudEditorButton;
-	Label.VSplitRight(LineSize + 8.0f, &EdgeInfoTitleLabel, &EdgeInfoHudEditorButton);
-	static CButtonContainer s_EdgeInfoHudEditorButton;
-	const bool EdgeInfoCanOpenHudEditor = Client()->State() == IClient::STATE_ONLINE || Client()->State() == IClient::STATE_DEMOPLAYBACK;
-	const bool EdgeInfoHudEditorClicked = Ui()->DoButton_FontIcon(&s_EdgeInfoHudEditorButton, FontIcon::UP_RIGHT_AND_DOWN_LEFT_FROM_CENTER, EdgeInfoCanOpenHudEditor ? 0 : -1, &EdgeInfoHudEditorButton, BUTTONFLAG_LEFT);
-	GameClient()->m_Tooltips.DoToolTip(&s_EdgeInfoHudEditorButton, &EdgeInfoHudEditorButton, EdgeInfoCanOpenHudEditor ? BcLocalize("Open in HUD editor") : BcLocalize("Join a game first"));
-	GameClient()->m_Tooltips.SetFadeTime(&s_EdgeInfoHudEditorButton, 0.0f);
-	if(EdgeInfoHudEditorClicked && EdgeInfoCanOpenHudEditor)
-	{
-		SetActive(false);
-		GameClient()->m_HudEditor.Activate();
-	}
-	Ui()->DoLabel(&EdgeInfoTitleLabel, BcLocalize("Edge Info"), HeadlineFontSize, TEXTALIGN_ML);
-	EdgeInfoBlock.HSplitTop(MarginSmall, nullptr, &EdgeInfoBlock);
-
-	EdgeInfoBlock.HSplitTop(LineSize, &Label, &EdgeInfoBlock);
-	static CButtonContainer s_EdgeInfoBindReader;
-	static CButtonContainer s_EdgeInfoBindClear;
-	DoLine_KeyReader(Label, s_EdgeInfoBindReader, s_EdgeInfoBindClear, BcLocalize("Show edge info"), "ri_toggle_edgeinfo");
-
-	EdgeInfoBlock.HSplitTop(MarginSmall, nullptr, &EdgeInfoBlock);
-	EdgeInfoBlock.HSplitTop(LineSize, &Content, &EdgeInfoBlock);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_RiEdgeInfoCords, BcLocalize("Show edge info about freeze"), &g_Config.m_RiEdgeInfoCords, &Content, LineSize);
-
-	EdgeInfoBlock.HSplitTop(MarginSmall, nullptr, &EdgeInfoBlock);
-	EdgeInfoBlock.HSplitTop(LineSize, &Content, &EdgeInfoBlock);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_RiEdgeInfoJump, BcLocalize("Show edge info about jumps"), &g_Config.m_RiEdgeInfoJump, &Content, LineSize);
-
-	static CButtonContainer s_EdgeInfoFreezeColorButton;
-	static CButtonContainer s_EdgeInfoKillColorButton;
-	static CButtonContainer s_EdgeInfoSafeColorButton;
-	EdgeInfoBlock.HSplitTop(MarginSmall, nullptr, &EdgeInfoBlock);
-	DoLine_ColorPicker(&s_EdgeInfoFreezeColorButton, EdgeInfoColorPickerLineSize, 13.0f, MarginSmall, &EdgeInfoBlock, BcLocalize("Color when over freeze"), &g_Config.m_RiEdgeInfoColorFreeze, color_cast<ColorRGBA>(ColorHSLA(DefaultConfig::RiEdgeInfoColorFreeze)), false);
-	DoLine_ColorPicker(&s_EdgeInfoKillColorButton, EdgeInfoColorPickerLineSize, 13.0f, MarginSmall, &EdgeInfoBlock, BcLocalize("Color when over kill"), &g_Config.m_RiEdgeInfoColorKill, color_cast<ColorRGBA>(ColorHSLA(DefaultConfig::RiEdgeInfoColorKill)), false);
-	DoLine_ColorPicker(&s_EdgeInfoSafeColorButton, EdgeInfoColorPickerLineSize, 13.0f, MarginSmall, &EdgeInfoBlock, BcLocalize("Color when falling safely"), &g_Config.m_RiEdgeInfoColorSafe, color_cast<ColorRGBA>(ColorHSLA(DefaultConfig::RiEdgeInfoColorSafe)), false);
 
 	const float LeftColumnEndY = LeftColumn.y;
 	const float RightColumnEndY = RightColumn.y;
@@ -4225,9 +3618,56 @@ void CMenus::RenderSettingsBestClientOthers(CUIRect MainView)
 
 	BrowserUtilsBlock.HSplitTop(MarginSmall, nullptr, &BrowserUtilsBlock);
 	BrowserUtilsBlock.HSplitTop(LineSize, &Content, &BrowserUtilsBlock);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcMastersrv, BcLocalize("Use BestClient MasterServer"), &g_Config.m_BcMastersrv, &Content, LineSize);
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcMastersrv, BcLocalize("Use RequiemClient MasterServer"), &g_Config.m_BcMastersrv, &Content, LineSize);
 
 	Column.HSplitTop(MarginBetweenViews, nullptr, &Column);
+
+	const bool ShowNamePlateSettings = g_Config.m_BcClientIndicatorInNamePlate != 0;
+	const bool ShowScoreboardSettings = g_Config.m_BcClientIndicatorInScoreboard != 0;
+	const float NamePlateSettingsHeight = ShowNamePlateSettings ? 2.0f * LineSize : 0.0f;
+	const float ScoreboardSettingsHeight = ShowScoreboardSettings ? LineSize : 0.0f;
+	const float ClientIndicatorBlockHeight = LineSize + MarginSmall + 3.0f * LineSize + NamePlateSettingsHeight + ScoreboardSettingsHeight;
+
+	CUIRect ClientIndicatorBlock;
+	RightColumn.HSplitTop(ClientIndicatorBlockHeight, &ClientIndicatorBlock, &RightColumn);
+
+	CUIRect ClientIndicatorBlockBg = ClientIndicatorBlock;
+	ClientIndicatorBlockBg.w += BlockPadding;
+	ClientIndicatorBlockBg.h += BlockPadding;
+	ClientIndicatorBlockBg.x -= BlockPadding * 0.5f;
+	ClientIndicatorBlockBg.y -= BlockPadding * 0.5f;
+	BestClientUiTheme::DrawUiBlock(&ClientIndicatorBlockBg, IGraphics::CORNER_ALL, 10.0f);
+	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_BcClientIndicatorInNamePlate, &ClientIndicatorBlockBg);
+
+	ClientIndicatorBlock.HSplitTop(LineSize, &Label, &ClientIndicatorBlock);
+	Ui()->DoLabel(&Label, BcLocalize("Client Indicator"), HeadlineFontSize, TEXTALIGN_ML);
+	ClientIndicatorBlock.HSplitTop(MarginSmall, nullptr, &ClientIndicatorBlock);
+
+	ClientIndicatorBlock.HSplitTop(LineSize, &Content, &ClientIndicatorBlock);
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcClientIndicatorInNamePlate, BcLocalize("Show indicator in name plates"), &g_Config.m_BcClientIndicatorInNamePlate, &Content, LineSize);
+
+	if(ShowNamePlateSettings)
+	{
+		ClientIndicatorBlock.HSplitTop(LineSize, &Content, &ClientIndicatorBlock);
+		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcClientIndicatorInNamePlateAboveSelf, BcLocalize("Show above yourself"), &g_Config.m_BcClientIndicatorInNamePlateAboveSelf, &Content, LineSize);
+
+		ClientIndicatorBlock.HSplitTop(LineSize, &Button, &ClientIndicatorBlock);
+		Ui()->DoScrollbarOption(&g_Config.m_BcClientIndicatorInNamePlateSize, &g_Config.m_BcClientIndicatorInNamePlateSize, &Button, BcLocalize("Name plate indicator size"), -50, 100);
+	}
+
+	ClientIndicatorBlock.HSplitTop(LineSize, &Content, &ClientIndicatorBlock);
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcClientIndicatorInScoreboard, BcLocalize("Show indicator in scoreboard"), &g_Config.m_BcClientIndicatorInScoreboard, &Content, LineSize);
+
+	if(ShowScoreboardSettings)
+	{
+		ClientIndicatorBlock.HSplitTop(LineSize, &Button, &ClientIndicatorBlock);
+		Ui()->DoScrollbarOption(&g_Config.m_BcClientIndicatorInSoreboardSize, &g_Config.m_BcClientIndicatorInSoreboardSize, &Button, BcLocalize("Scoreboard indicator size"), -50, 100);
+	}
+
+	ClientIndicatorBlock.HSplitTop(LineSize, &Content, &ClientIndicatorBlock);
+	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcRequiemIndicator, BcLocalize("Show Requiem indicator above yourself"), &g_Config.m_BcRequiemIndicator, &Content, LineSize);
+
+	RightColumn.HSplitTop(MarginBetweenViews, nullptr, &RightColumn);
 
 	const bool RollbackDemoExpanded = g_Config.m_ClReplays != 0;
 	const float RollbackDemoHeaderHeight = LineSize + MarginSmall + LineSize;
@@ -4236,7 +3676,7 @@ void CMenus::RenderSettingsBestClientOthers(CUIRect MainView)
 	const float RollbackDemoBlockHeight = RollbackDemoHeaderHeight + RollbackDemoExpandedHeight;
 
 	CUIRect RollbackDemoBlock;
-	Column.HSplitTop(RollbackDemoBlockHeight, &RollbackDemoBlock, &Column);
+	RightColumn.HSplitTop(RollbackDemoBlockHeight, &RollbackDemoBlock, &RightColumn);
 
 	CUIRect RollbackDemoBlockBg = RollbackDemoBlock;
 	RollbackDemoBlockBg.w += BlockPadding;
@@ -4281,7 +3721,7 @@ void CMenus::RenderSettingsBestClientOthers(CUIRect MainView)
 		}
 	}
 
-	Column.HSplitTop(MarginBetweenViews, nullptr, &Column);
+	RightColumn.HSplitTop(MarginBetweenViews, nullptr, &RightColumn);
 
 	const bool FocusModeEnabled = g_Config.m_ClFocusMode != 0;
 	const bool FocusModeAutoReplyEnabled = g_Config.m_ClFocusModeAutoReply != 0;
@@ -4291,7 +3731,7 @@ void CMenus::RenderSettingsBestClientOthers(CUIRect MainView)
 	const float FocusModeBlockHeight = FocusModeHeaderHeight + FocusModeExpandedHeight;
 
 	CUIRect FocusModeBlock;
-	Column.HSplitTop(FocusModeBlockHeight, &FocusModeBlock, &Column);
+	RightColumn.HSplitTop(FocusModeBlockHeight, &FocusModeBlock, &RightColumn);
 
 	CUIRect FocusModeBlockBg = FocusModeBlock;
 	FocusModeBlockBg.w += BlockPadding;
@@ -4367,105 +3807,6 @@ void CMenus::RenderSettingsBestClientOthers(CUIRect MainView)
 		}
 	}
 
-	const bool VoiceExpanded = g_Config.m_BcVoiceChatEnable != 0;
-	static float s_VoiceRevealPhase = 0.0f;
-	BCUiAnimations::UpdateModuleRevealPhase(s_VoiceRevealPhase, VoiceExpanded, Client()->RenderFrameTime());
-	const float VoiceSettingsBlockHeight = GameClient()->m_VoiceChat.GetMenuSettingsBlockHeight(s_VoiceRevealPhase) + LineSize + MarginSmall;
-
-	CUIRect VoiceSettingsBlock;
-	RightColumn.HSplitTop(VoiceSettingsBlockHeight, &VoiceSettingsBlock, &RightColumn);
-	CUIRect VoiceSettingsBlockBg = VoiceSettingsBlock;
-	VoiceSettingsBlockBg.w += BlockPadding;
-	VoiceSettingsBlockBg.h += BlockPadding;
-	VoiceSettingsBlockBg.x -= BlockPadding * 0.5f;
-	VoiceSettingsBlockBg.y -= BlockPadding * 0.5f;
-	BestClientUiTheme::DrawUiBlock(&VoiceSettingsBlockBg, IGraphics::CORNER_ALL, 10.0f);
-	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_BcVoiceChatEnable, &VoiceSettingsBlockBg);
-
-	CUIRect VoiceSettingsContent = VoiceSettingsBlock;
-	VoiceSettingsContent.HSplitBottom(LineSize, &VoiceSettingsContent, &Button);
-	Button.VSplitRight(150.0f, nullptr, &Button);
-	static CButtonContainer s_VoiceModerationButton;
-	if(DoButton_Menu(&s_VoiceModerationButton, BcLocalize("Voice Moderation"), 0, &Button))
-	{
-		static SPopupMenuId s_PopupId;
-		static SPopupVoiceModerationContext s_Context;
-		s_Context.m_pMenus = this;
-		Ui()->DoPopupMenu(&s_PopupId, Button.x, Button.y + Button.h, 300.0f, 260.0f, &s_Context, PopupVoiceModeration);
-	}
-	GameClient()->m_VoiceChat.RenderMenuSettingsBlock(VoiceSettingsContent, s_VoiceRevealPhase);
-	RightColumn.HSplitTop(MarginBetweenViews, nullptr, &RightColumn);
-
-	const float VoiceBindsBlockHeight = LineSize + MarginSmall + 3.0f * LineSize + 2.0f * MarginSmall;
-	CUIRect VoiceBindsBlock;
-	RightColumn.HSplitTop(VoiceBindsBlockHeight, &VoiceBindsBlock, &RightColumn);
-	CUIRect VoiceBindsBlockBg = VoiceBindsBlock;
-	VoiceBindsBlockBg.w += BlockPadding;
-	VoiceBindsBlockBg.h += BlockPadding;
-	VoiceBindsBlockBg.x -= BlockPadding * 0.5f;
-	VoiceBindsBlockBg.y -= BlockPadding * 0.5f;
-	BestClientUiTheme::DrawUiBlock(&VoiceBindsBlockBg, IGraphics::CORNER_ALL, 10.0f);
-	VoiceBindsBlock.HSplitTop(LineSize, &Label, &VoiceBindsBlock);
-	Ui()->DoLabel(&Label, BcLocalize("Voice Binds"), HeadlineFontSize, TEXTALIGN_ML);
-	VoiceBindsBlock.HSplitTop(MarginSmall, nullptr, &VoiceBindsBlock);
-	static CButtonContainer s_PttBindReader;
-	static CButtonContainer s_PttBindClear;
-	static CButtonContainer s_MicMuteBindReader;
-	static CButtonContainer s_MicMuteBindClear;
-	static CButtonContainer s_HeadphonesMuteBindReader;
-	static CButtonContainer s_HeadphonesMuteBindClear;
-	VoiceBindsBlock.HSplitTop(LineSize, &Button, &VoiceBindsBlock);
-	DoLine_KeyReader(Button, s_PttBindReader, s_PttBindClear, BcLocalize("Push-to-talk"), "+voicechat");
-	VoiceBindsBlock.HSplitTop(MarginSmall, nullptr, &VoiceBindsBlock);
-	VoiceBindsBlock.HSplitTop(LineSize, &Button, &VoiceBindsBlock);
-	DoLine_KeyReader(Button, s_MicMuteBindReader, s_MicMuteBindClear, BcLocalize("Mute microphone"), "toggle_voice_mic_mute");
-	VoiceBindsBlock.HSplitTop(MarginSmall, nullptr, &VoiceBindsBlock);
-	VoiceBindsBlock.HSplitTop(LineSize, &Button, &VoiceBindsBlock);
-	DoLine_KeyReader(Button, s_HeadphonesMuteBindReader, s_HeadphonesMuteBindClear, BcLocalize("Mute headphones"), "toggle_voice_headphones_mute");
-
-	RightColumn.HSplitTop(MarginBetweenViews, nullptr, &RightColumn);
-	const bool ShowNamePlateSettings = g_Config.m_BcClientIndicatorInNamePlate != 0;
-	const bool ShowScoreboardSettings = g_Config.m_BcClientIndicatorInScoreboard != 0;
-	const float NamePlateSettingsHeight = ShowNamePlateSettings ? 2.0f * LineSize : 0.0f;
-	const float ScoreboardSettingsHeight = ShowScoreboardSettings ? LineSize : 0.0f;
-	const float ClientIndicatorBlockHeight = LineSize + MarginSmall + 2.0f * LineSize + NamePlateSettingsHeight + ScoreboardSettingsHeight;
-
-	CUIRect ClientIndicatorBlock;
-	RightColumn.HSplitTop(ClientIndicatorBlockHeight, &ClientIndicatorBlock, &RightColumn);
-
-	CUIRect ClientIndicatorBlockBg = ClientIndicatorBlock;
-	ClientIndicatorBlockBg.w += BlockPadding;
-	ClientIndicatorBlockBg.h += BlockPadding;
-	ClientIndicatorBlockBg.x -= BlockPadding * 0.5f;
-	ClientIndicatorBlockBg.y -= BlockPadding * 0.5f;
-	BestClientUiTheme::DrawUiBlock(&ClientIndicatorBlockBg, IGraphics::CORNER_ALL, 10.0f);
-	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_BcClientIndicatorInNamePlate, &ClientIndicatorBlockBg);
-
-	ClientIndicatorBlock.HSplitTop(LineSize, &Label, &ClientIndicatorBlock);
-	Ui()->DoLabel(&Label, BcLocalize("Client Indicator"), HeadlineFontSize, TEXTALIGN_ML);
-	ClientIndicatorBlock.HSplitTop(MarginSmall, nullptr, &ClientIndicatorBlock);
-
-	ClientIndicatorBlock.HSplitTop(LineSize, &Content, &ClientIndicatorBlock);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcClientIndicatorInNamePlate, BcLocalize("Show indicator in name plates"), &g_Config.m_BcClientIndicatorInNamePlate, &Content, LineSize);
-
-	if(ShowNamePlateSettings)
-	{
-		ClientIndicatorBlock.HSplitTop(LineSize, &Content, &ClientIndicatorBlock);
-		DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcClientIndicatorInNamePlateAboveSelf, BcLocalize("Show above yourself"), &g_Config.m_BcClientIndicatorInNamePlateAboveSelf, &Content, LineSize);
-
-		ClientIndicatorBlock.HSplitTop(LineSize, &Button, &ClientIndicatorBlock);
-		Ui()->DoScrollbarOption(&g_Config.m_BcClientIndicatorInNamePlateSize, &g_Config.m_BcClientIndicatorInNamePlateSize, &Button, BcLocalize("Name plate indicator size"), -50, 100);
-	}
-
-	ClientIndicatorBlock.HSplitTop(LineSize, &Content, &ClientIndicatorBlock);
-	DoButton_CheckBoxAutoVMarginAndSet(&g_Config.m_BcClientIndicatorInScoreboard, BcLocalize("Show indicator in scoreboard"), &g_Config.m_BcClientIndicatorInScoreboard, &Content, LineSize);
-
-	if(ShowScoreboardSettings)
-	{
-		ClientIndicatorBlock.HSplitTop(LineSize, &Button, &ClientIndicatorBlock);
-		Ui()->DoScrollbarOption(&g_Config.m_BcClientIndicatorInSoreboardSize, &g_Config.m_BcClientIndicatorInSoreboardSize, &Button, BcLocalize("Scoreboard indicator size"), -50, 100);
-	}
-
 	CUIRect OthersScrollContentRect;
 	OthersScrollContentRect.x = OthersScrollContentX;
 	OthersScrollContentRect.y = std::max(Column.y, RightColumn.y) + MarginSmall * 2.0f;
@@ -4473,161 +3814,6 @@ void CMenus::RenderSettingsBestClientOthers(CUIRect MainView)
 	OthersScrollContentRect.h = 0.0f;
 	s_OthersScrollRegion.AddRect(OthersScrollContentRect);
 	s_OthersScrollRegion.End();
-}
-
-CUi::EPopupMenuFunctionResult CMenus::PopupVoiceModeration(void *pContext, CUIRect View, bool Active)
-{
-	SPopupVoiceModerationContext *pPopupContext = static_cast<SPopupVoiceModerationContext *>(pContext);
-	CMenus *pMenus = pPopupContext->m_pMenus;
-	CVoiceChat &Voice = pMenus->GameClient()->m_VoiceChat;
-	const float RowH = 24.0f;
-	const float Pad = 6.0f;
-
-	(void)Active;
-	View.Margin(10.0f, &View);
-
-	CUIRect Row;
-	if(!Voice.IsVoiceRegistered())
-	{
-		View.HSplitTop(RowH, &Row, &View);
-		pMenus->Ui()->DoLabel(&Row, BcLocalize("Not connected to voice server"), 13.0f, TEXTALIGN_MC);
-		return CUi::POPUP_KEEP_OPEN;
-	}
-
-	static CLineInputBuffered<128> s_VoiceModKeyInput;
-	static CButtonContainer s_VoiceModAuthButton;
-	static CButtonContainer s_VoiceModRefreshButton;
-	static std::vector<CButtonContainer> s_vVoiceModMuteButtons;
-	static int64_t s_LastVoiceModRefreshTick = 0;
-
-	if(!Voice.IsVoiceModAuthed())
-	{
-		if(s_VoiceModKeyInput.IsEmpty() && g_Config.m_BcVoiceModKey[0] != '\0')
-			s_VoiceModKeyInput.Set(g_Config.m_BcVoiceModKey);
-
-		View.HSplitTop(RowH, &Row, &View);
-		pMenus->Ui()->DoLabel(&Row, BcLocalize("Voice Moderator Login"), 14.0f, TEXTALIGN_MC);
-		View.HSplitTop(Pad, nullptr, &View);
-
-		CUIRect LabelRect, FieldRect;
-		View.HSplitTop(RowH, &Row, &View);
-		Row.VSplitLeft(80.0f, &LabelRect, &FieldRect);
-		pMenus->Ui()->DoLabel(&LabelRect, BcLocalize("Mod key:"), 12.0f, TEXTALIGN_ML);
-		FieldRect.HMargin(2.0f, &FieldRect);
-		s_VoiceModKeyInput.SetHidden(true);
-		pMenus->Ui()->DoEditBox(&s_VoiceModKeyInput, &FieldRect, 12.0f);
-
-		View.HSplitTop(Pad, nullptr, &View);
-		View.HSplitTop(RowH, &Row, &View);
-
-		auto DoLogin = [&]() {
-			const char *pKey = s_VoiceModKeyInput.GetString();
-			str_copy(g_Config.m_BcVoiceModKey, pKey, sizeof(g_Config.m_BcVoiceModKey));
-			Voice.VoiceModAuth(pKey);
-		};
-
-		if(Voice.IsVoiceModAuthPending())
-		{
-			pMenus->Ui()->DoLabel(&Row, BcLocalize("Authenticating..."), 12.0f, TEXTALIGN_MC);
-		}
-		else if(Voice.IsVoiceModAuthFailed())
-		{
-			CUIRect MsgRect, BtnRect;
-			Row.VSplitRight(110.0f, &MsgRect, &BtnRect);
-			pMenus->TextRender()->TextColor(ColorRGBA(1.0f, 0.3f, 0.3f, 1.0f));
-			pMenus->Ui()->DoLabel(&MsgRect, BcLocalize("Wrong key"), 12.0f, TEXTALIGN_ML);
-			pMenus->TextRender()->TextColor(pMenus->TextRender()->DefaultTextColor());
-			if(pMenus->DoButton_Menu(&s_VoiceModAuthButton, BcLocalize("Try again"), 0, &BtnRect))
-				DoLogin();
-		}
-		else if(pMenus->DoButton_Menu(&s_VoiceModAuthButton, BcLocalize("Login as Voice Mod"), 0, &Row))
-		{
-			DoLogin();
-		}
-		return CUi::POPUP_KEEP_OPEN;
-	}
-
-	View.HSplitTop(RowH, &Row, &View);
-	CUIRect TitleRect, RefreshBtn;
-	Row.VSplitRight(90.0f, &TitleRect, &RefreshBtn);
-	pMenus->Ui()->DoLabel(&TitleRect, BcLocalize("Voice players on this server"), 13.0f, TEXTALIGN_ML);
-	if(pMenus->DoButton_Menu(&s_VoiceModRefreshButton, BcLocalize("Refresh"), 0, &RefreshBtn))
-	{
-		Voice.VoiceModRefresh();
-		s_LastVoiceModRefreshTick = time_get();
-	}
-
-	const int64_t Now = time_get();
-	const int64_t Interval = time_freq() * 3;
-	if(s_LastVoiceModRefreshTick == 0 || Now - s_LastVoiceModRefreshTick > Interval)
-	{
-		Voice.VoiceModRefresh();
-		s_LastVoiceModRefreshTick = Now;
-	}
-
-	View.HSplitTop(Pad, nullptr, &View);
-	const auto &Players = Voice.GetVoiceModPlayers();
-	if(Players.empty())
-	{
-		View.HSplitTop(RowH, &Row, &View);
-		pMenus->Ui()->DoLabel(&Row, BcLocalize("No players in current voice room"), 12.0f, TEXTALIGN_MC);
-		return CUi::POPUP_KEEP_OPEN;
-	}
-
-	if(s_vVoiceModMuteButtons.size() != Players.size())
-		s_vVoiceModMuteButtons.resize(Players.size());
-
-	View.HSplitTop(18.0f, &Row, &View);
-	CUIRect NameHeader, ActionHeader;
-	Row.VSplitRight(80.0f, &NameHeader, &ActionHeader);
-	pMenus->TextRender()->TextColor(ColorRGBA(1.0f, 1.0f, 1.0f, 0.5f));
-	pMenus->Ui()->DoLabel(&NameHeader, BcLocalize("Player"), 11.0f, TEXTALIGN_ML);
-	pMenus->Ui()->DoLabel(&ActionHeader, BcLocalize("Action"), 11.0f, TEXTALIGN_MC);
-	pMenus->TextRender()->TextColor(pMenus->TextRender()->DefaultTextColor());
-
-	static CScrollRegion s_VoiceModScroll;
-	CScrollRegionParams ScrollParams;
-	ScrollParams.m_ScrollUnit = RowH + 4.0f;
-	ScrollParams.m_ScrollbarMargin = 4.0f;
-	s_VoiceModScroll.Begin(&View, &ScrollParams);
-
-	for(size_t i = 0; i < Players.size(); ++i)
-	{
-		const CVoiceChat::SModPlayer &Player = Players[i];
-		CUIRect PlayerRow;
-		View.HSplitTop(RowH, &PlayerRow, &View);
-		const bool Visible = s_VoiceModScroll.AddRect(PlayerRow);
-		CUIRect Spacing;
-		View.HSplitTop(4.0f, &Spacing, &View);
-		s_VoiceModScroll.AddRect(Spacing);
-		if(!Visible)
-			continue;
-
-		PlayerRow.Draw(ColorRGBA(0.0f, 0.0f, 0.0f, 0.25f), IGraphics::CORNER_ALL, 4.0f);
-		CUIRect NameRect, MuteBtn;
-		PlayerRow.VSplitRight(80.0f, &NameRect, &MuteBtn);
-		NameRect.VMargin(4.0f, &NameRect);
-		MuteBtn.HMargin(3.0f, &MuteBtn);
-
-		char aName[96];
-		if(Player.m_Name.empty())
-			str_format(aName, sizeof(aName), BcLocalize("slot %d"), (int)Player.m_GameClientId);
-		else
-			str_copy(aName, Player.m_Name.c_str(), sizeof(aName));
-
-		if(Player.m_IsMuted)
-			pMenus->TextRender()->TextColor(ColorRGBA(1.0f, 0.4f, 0.4f, 1.0f));
-		pMenus->Ui()->DoLabel(&NameRect, aName, 11.5f, TEXTALIGN_ML);
-		if(Player.m_IsMuted)
-			pMenus->TextRender()->TextColor(pMenus->TextRender()->DefaultTextColor());
-
-		const char *pBtnLabel = Player.m_IsMuted ? BcLocalize("Unmute") : BcLocalize("Mute");
-		if(pMenus->DoButton_Menu(&s_vVoiceModMuteButtons[i], pBtnLabel, 0, &MuteBtn))
-			Voice.VoiceModMute(Player.m_SessionId, !Player.m_IsMuted);
-	}
-
-	s_VoiceModScroll.End();
-	return CUi::POPUP_KEEP_OPEN;
 }
 
 void CMenus::RenderSettingsBestClientInfo(CUIRect MainView)
@@ -4639,11 +3825,6 @@ void CMenus::RenderSettingsBestClientInfo(CUIRect MainView)
 	const float HeadlineHeight = HeadlineFontSize;
 
 	CUIRect LeftView, RightView, Button, Label, LowerLeftView;
-	CUIRect GamesButton;
-	MainView.HSplitTop(24.0f, &GamesButton, &MainView);
-	static CButtonContainer s_GamesButton;
-	if(DoButton_MenuTab(&s_GamesButton, BcLocalize("Mini games"), 0, &GamesButton, IGraphics::CORNER_ALL, nullptr, nullptr, nullptr, nullptr, 4.0f))
-		OpenBestClientFun();
 	MainView.HSplitTop(10.0f, nullptr, &MainView);
 	MainView.HSplitTop(20.0f, nullptr, &MainView);
 
@@ -4654,7 +3835,7 @@ void CMenus::RenderSettingsBestClientInfo(CUIRect MainView)
 
 	// ── BestClient Links ───────────────────────────────────────────────────
 	LeftView.HSplitTop(HeadlineHeight, &Label, &LeftView);
-	Ui()->DoLabel(&Label, BcLocalize("BestClient Links"), HeadlineFontSize, TEXTALIGN_ML);
+	Ui()->DoLabel(&Label, BcLocalize("RequiemClient Links"), HeadlineFontSize, TEXTALIGN_ML);
 	LeftView.HSplitTop(MarginSmall, nullptr, &LeftView);
 
 	static CButtonContainer s_DiscordButton, s_WebsiteButton, s_TelegramButton;
@@ -4691,7 +3872,7 @@ void CMenus::RenderSettingsBestClientInfo(CUIRect MainView)
 	BestClientConfig = Button;
 
 	static CButtonContainer s_Config;
-	if(DoButtonLineSize_Menu(&s_Config, BcLocalize("BestClient Settings"), 0, &BestClientConfig, LineSize, false, nullptr, IGraphics::CORNER_ALL, 5.0f, 0.0f, ColorRGBA(0.0f, 0.0f, 0.0f, 0.25f)))
+	if(DoButtonLineSize_Menu(&s_Config, BcLocalize("RequiemClient Settings"), 0, &BestClientConfig, LineSize, false, nullptr, IGraphics::CORNER_ALL, 5.0f, 0.0f, ColorRGBA(0.0f, 0.0f, 0.0f, 0.25f)))
 	{
 		Storage()->GetCompletePath(IStorage::TYPE_SAVE, s_aConfigDomains[ConfigDomain::BESTCLIENT].m_aConfigPath, aBuf, sizeof(aBuf));
 		Client()->ViewFile(aBuf);
@@ -4699,7 +3880,7 @@ void CMenus::RenderSettingsBestClientInfo(CUIRect MainView)
 
 	// ── BestClient Developers ─────────────────────────────────────────────
 	RightView.HSplitTop(HeadlineHeight, &Label, &RightView);
-	Ui()->DoLabel(&Label, BcLocalize("BestClient Developers"), HeadlineFontSize, TEXTALIGN_ML);
+	Ui()->DoLabel(&Label, BcLocalize("RequiemClient Developers"), HeadlineFontSize, TEXTALIGN_ML);
 	RightView.HSplitTop(MarginSmall, nullptr, &RightView);
 	RightView.HSplitTop(MarginSmall, nullptr, &RightView);
 
@@ -4707,45 +3888,12 @@ void CMenus::RenderSettingsBestClientInfo(CUIRect MainView)
 	const float DevNameFontSize = 24.0f;
 	const float CardSize = TeeSize + MarginSmall * 2.0f;
 	CUIRect TeeRect, DevCardRect;
-	static CButtonContainer s_LinkButton1, s_LinkButton2, s_LinkButton3;
 	{
 		RightView.HSplitTop(CardSize, &DevCardRect, &RightView);
 		DevCardRect.VSplitLeft(CardSize, &TeeRect, &Label);
-		Label.VSplitLeft(TextRender()->TextWidth(DevNameFontSize, "RoflikBEST"), &Label, &Button);
-		Button.VSplitLeft(MarginSmall, nullptr, &Button);
-		Button.w = DevNameFontSize;
-		Button.h = DevNameFontSize;
-		Button.y = Label.y + (Label.h / 2.0f - Button.h / 2.0f);
-		Ui()->DoLabel(&Label, "RoflikBEST", DevNameFontSize, TEXTALIGN_ML);
-		if(Ui()->DoButton_FontIcon(&s_LinkButton1, FontIcon::ARROW_UP_RIGHT_FROM_SQUARE, 0, &Button, IGraphics::CORNER_ALL))
-			Client()->ViewLink("https://github.com/roflikbest");
-		RenderDevSkin(TeeRect.Center(), TeeSize, "10Nanami_glow", "nanami", true, 0, 0, 0, false, true, ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f), ColorRGBA(0.94f, 0.74f, 0.92f, 1.0f));
-	}
-	{
-		RightView.HSplitTop(CardSize, &DevCardRect, &RightView);
-		DevCardRect.VSplitLeft(CardSize, &TeeRect, &Label);
-		Label.VSplitLeft(TextRender()->TextWidth(DevNameFontSize, "noxygalaxy"), &Label, &Button);
-		Button.VSplitLeft(MarginSmall, nullptr, &Button);
-		Button.w = DevNameFontSize;
-		Button.h = DevNameFontSize;
-		Button.y = Label.y + (Label.h / 2.0f - Button.h / 2.0f);
-		Ui()->DoLabel(&Label, "noxygalaxy", DevNameFontSize, TEXTALIGN_ML);
-		if(Ui()->DoButton_FontIcon(&s_LinkButton3, FontIcon::ARROW_UP_RIGHT_FROM_SQUARE, 0, &Button, IGraphics::CORNER_ALL))
-			Client()->ViewLink("https://github.com/noxygalaxy");
-		RenderDevSkin(TeeRect.Center(), TeeSize, "Niko_OneShot", "Niko_OneShot", false, 0, 0, 0, false, true);
-	}
-	{
-		RightView.HSplitTop(CardSize, &DevCardRect, &RightView);
-		DevCardRect.VSplitLeft(CardSize, &TeeRect, &Label);
-		Label.VSplitLeft(TextRender()->TextWidth(DevNameFontSize, "sqwinix"), &Label, &Button);
-		Button.VSplitLeft(MarginSmall, nullptr, &Button);
-		Button.w = DevNameFontSize;
-		Button.h = DevNameFontSize;
-		Button.y = Label.y + (Label.h / 2.0f - Button.h / 2.0f);
-		Ui()->DoLabel(&Label, "sqwinix", DevNameFontSize, TEXTALIGN_ML);
-		if(Ui()->DoButton_FontIcon(&s_LinkButton2, FontIcon::ARROW_UP_RIGHT_FROM_SQUARE, 0, &Button, IGraphics::CORNER_ALL))
-			Client()->ViewLink("https://github.com/sqwinixxx");
-		RenderDevSkin(TeeRect.Center(), TeeSize, "sticker_nanami", "sticker_nanami", true, 0, 0, 0, false, true, ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f), ColorRGBA(1.0f, 1.0f, 1.0f, 1.0f));
+		Ui()->DoLabel(&Label, "Requ!em", DevNameFontSize, TEXTALIGN_ML);
+		RenderDevSkin(TeeRect.Center(), TeeSize, g_Config.m_ClPlayerSkin, "default", g_Config.m_ClPlayerUseCustomColor != 0,
+			g_Config.m_ClPlayerColorFeet, g_Config.m_ClPlayerColorBody, 0, false, true);
 	}
 
 	// ── Hide Settings Tabs ────────────────────────────────────────────────
@@ -4797,19 +3945,19 @@ void CMenus::RenderSettingsBestClientWeaponGlow(CUIRect &Column)
 	constexpr float MarginSmall = 5.0f;
 	constexpr float PreviewHeight = 106.0f;
 	static int s_Weapon = 0;
-	static CButtonContainer s_aWeaponButtons[3];
+	static CButtonContainer s_aWeaponButtons[2];
 	static CButtonContainer s_aModeButtons[4];
 	static CButtonContainer s_aResetColor[3];
 	static CButtonContainer s_ResetButton;
 	static CButtonContainer s_WeaponGlowAuthorBadge;
-	const char *apTitles[] = {BcLocalize("Laser Glow"), BcLocalize("Shotgun Glow"), BcLocalize("Rocket Glow")};
-	const char *apWeapons[] = {BcLocalize("Laser"), BcLocalize("Shotgun"), BcLocalize("Rocket")};
+	const char *apTitles[] = {BcLocalize("Shotgun Glow"), BcLocalize("Rocket Glow")};
+	const char *apWeapons[] = {BcLocalize("Shotgun"), BcLocalize("Rocket")};
 	const char *apModes[] = {BcLocalize("Classic"), BcLocalize("Prism"), BcLocalize("Pulse"), BcLocalize("Crystal")};
-	int *apEnabled[] = {&g_Config.m_BcLaserGlow, &g_Config.m_BcShotgunGlow, &g_Config.m_BcRocketGlow};
-	int *apPower[] = {&g_Config.m_BcLaserGlowPower, &g_Config.m_BcShotgunGlowPower, &g_Config.m_BcRocketGlowPower};
-	int *apMode[] = {&g_Config.m_BcLaserGlowMode, &g_Config.m_BcShotgunGlowMode, &g_Config.m_BcRocketGlowMode};
-	unsigned *apColor[] = {&g_Config.m_BcLaserGlowColor, &g_Config.m_BcShotgunGlowColor, &g_Config.m_BcRocketGlowColor};
-	const unsigned aDefaultColors[] = {DefaultConfig::BcLaserGlowColor, DefaultConfig::BcShotgunGlowColor, DefaultConfig::BcRocketGlowColor};
+	int *apEnabled[] = {&g_Config.m_BcShotgunGlow, &g_Config.m_BcRocketGlow};
+	int *apPower[] = {&g_Config.m_BcShotgunGlowPower, &g_Config.m_BcRocketGlowPower};
+	int *apMode[] = {&g_Config.m_BcShotgunGlowMode, &g_Config.m_BcRocketGlowMode};
+	unsigned *apColor[] = {&g_Config.m_BcShotgunGlowColor, &g_Config.m_BcRocketGlowColor};
+	const unsigned aDefaultColors[] = {DefaultConfig::BcShotgunGlowColor, DefaultConfig::BcRocketGlowColor};
 	const float NukeHeight = s_Weapon == 2 ? (g_Config.m_BcMemeNukeExplosion ? 4 : 2) * (LineSize + MarginSmall) : 0.0f;
 	const float Height = 6 * (LineSize + MarginSmall) + PreviewHeight + MarginSmall + NukeHeight;
 	CUIRect Block;
@@ -4817,7 +3965,6 @@ void CMenus::RenderSettingsBestClientWeaponGlow(CUIRect &Column)
 	CUIRect Background = Block;
 	Background.Margin(-10.0f, &Background);
 	BestClientUiTheme::DrawUiBlock(&Background, IGraphics::CORNER_ALL, 10.0f);
-	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_BcLaserGlow, &Background);
 	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_BcShotgunGlow, &Background);
 	BestClientSettingsSearch::DrawBlockHighlight(&g_Config.m_BcRocketGlow, &Background);
 	CUIRect Row, Button;
@@ -4835,13 +3982,13 @@ void CMenus::RenderSettingsBestClientWeaponGlow(CUIRect &Column)
 	Ui()->DoLabel(&Row, apTitles[s_Weapon], 20.0f, TEXTALIGN_ML);
 	Block.HSplitTop(MarginSmall, nullptr, &Block);
 	Block.HSplitTop(LineSize, &Row, &Block);
-	const float WeaponWidth = Row.w / 3.0f;
+	const float WeaponWidth = Row.w / 2.0f;
 	int NextWeapon = s_Weapon;
-	for(int i = 0; i < 3; ++i)
+	for(int i = 0; i < 2; ++i)
 	{
 		Row.VSplitLeft(WeaponWidth, &Button, &Row);
 		Button.HMargin(2.0f, &Button);
-		const int Corners = i == 0 ? IGraphics::CORNER_L : (i == 2 ? IGraphics::CORNER_R : IGraphics::CORNER_NONE);
+		const int Corners = i == 0 ? IGraphics::CORNER_L : IGraphics::CORNER_R;
 		if(DoButton_Menu(&s_aWeaponButtons[i], apWeapons[i], s_Weapon == i, &Button, BUTTONFLAG_LEFT, nullptr, Corners))
 			NextWeapon = i;
 	}
@@ -4858,8 +4005,6 @@ void CMenus::RenderSettingsBestClientWeaponGlow(CUIRect &Column)
 	Block.HSplitTop(PreviewHeight, &Preview, &Block);
 	Ui()->ClipEnable(&Preview);
 	if(s_Weapon == 0)
-		DoLaserPreview(&Preview, ColorHSLA(g_Config.m_ClLaserRifleOutlineColor), ColorHSLA(g_Config.m_ClLaserRifleInnerColor), LASERTYPE_RIFLE);
-	else if(s_Weapon == 1)
 		DoLaserPreview(&Preview, ColorHSLA(g_Config.m_ClLaserShotgunOutlineColor), ColorHSLA(g_Config.m_ClLaserShotgunInnerColor), LASERTYPE_SHOTGUN);
 	else
 		DoRocketPreview(&Preview);
@@ -4875,7 +4020,7 @@ void CMenus::RenderSettingsBestClientWeaponGlow(CUIRect &Column)
 		if(DoButton_Menu(&s_aModeButtons[i], apModes[i], *apMode[s_Weapon] == i, &Button, BUTTONFLAG_LEFT, nullptr, Corners))
 			*apMode[s_Weapon] = i;
 	}
-	if(s_Weapon == 2)
+	if(s_Weapon == 1)
 	{
 		Block.HSplitTop(MarginSmall, nullptr, &Block);
 		Block.HSplitTop(LineSize, &Row, &Block);
@@ -4896,14 +4041,14 @@ void CMenus::RenderSettingsBestClientWeaponGlow(CUIRect &Column)
 	}
 	if(ResetClicked)
 	{
-		const int aDefaultEnabled[] = {DefaultConfig::BcLaserGlow, DefaultConfig::BcShotgunGlow, DefaultConfig::BcRocketGlow};
-		const int aDefaultPower[] = {DefaultConfig::BcLaserGlowPower, DefaultConfig::BcShotgunGlowPower, DefaultConfig::BcRocketGlowPower};
-		const int aDefaultModes[] = {DefaultConfig::BcLaserGlowMode, DefaultConfig::BcShotgunGlowMode, DefaultConfig::BcRocketGlowMode};
+		const int aDefaultEnabled[] = {DefaultConfig::BcShotgunGlow, DefaultConfig::BcRocketGlow};
+		const int aDefaultPower[] = {DefaultConfig::BcShotgunGlowPower, DefaultConfig::BcRocketGlowPower};
+		const int aDefaultModes[] = {DefaultConfig::BcShotgunGlowMode, DefaultConfig::BcRocketGlowMode};
 		*apEnabled[s_Weapon] = aDefaultEnabled[s_Weapon];
 		*apPower[s_Weapon] = aDefaultPower[s_Weapon];
 		*apMode[s_Weapon] = aDefaultModes[s_Weapon];
 		*apColor[s_Weapon] = aDefaultColors[s_Weapon];
-		if(s_Weapon == 2)
+		if(s_Weapon == 1)
 		{
 			g_Config.m_BcMemeNukeExplosion = DefaultConfig::BcMemeNukeExplosion;
 			g_Config.m_BcMemeNukeShake = DefaultConfig::BcMemeNukeShake;
