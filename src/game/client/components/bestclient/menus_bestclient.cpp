@@ -1399,16 +1399,16 @@ void CMenus::RenderSettingsBestClientVisuals(CUIRect MainView)
 					return 0;
 				auto *pContext = static_cast<SCursorTrailFileListContext *>(pUser);
 				pContext->m_pLabels->emplace_back(pName);
-				pContext->m_pPaths->emplace_back(std::string("BestClient/CTrails/") + pName);
+				pContext->m_pPaths->emplace_back(std::string("RequiemClient/CTrails/") + pName);
 				return 0;
 			};
 			Storage()->CreateFolder("BestClient", IStorage::TYPE_SAVE);
-			Storage()->CreateFolder("BestClient/CTrails", IStorage::TYPE_SAVE);
+			Storage()->CreateFolder("RequiemClient/CTrails", IStorage::TYPE_SAVE);
 			static std::vector<std::string> s_vCursorTrailFileLabels, s_vCursorTrailFilePaths;
 			s_vCursorTrailFileLabels.clear();
 			s_vCursorTrailFilePaths.clear();
 			SCursorTrailFileListContext CursorTrailFileContext{&s_vCursorTrailFileLabels, &s_vCursorTrailFilePaths};
-			Storage()->ListDirectory(IStorage::TYPE_SAVE, "BestClient/CTrails", CursorTrailFileListScan, &CursorTrailFileContext);
+			Storage()->ListDirectory(IStorage::TYPE_SAVE, "RequiemClient/CTrails", CursorTrailFileListScan, &CursorTrailFileContext);
 			std::vector<int> vSortedCursorTrailIndices(s_vCursorTrailFileLabels.size());
 			for(size_t i = 0; i < vSortedCursorTrailIndices.size(); ++i)
 				vSortedCursorTrailIndices[i] = (int)i;
@@ -1463,9 +1463,9 @@ void CMenus::RenderSettingsBestClientVisuals(CUIRect MainView)
 			if(Ui()->DoButton_FontIcon(&s_CursorTrailFolderButton, FontIcon::FOLDER, 0, &CursorTrailFolderButton, BUTTONFLAG_LEFT))
 			{
 				Storage()->CreateFolder("BestClient", IStorage::TYPE_SAVE);
-				Storage()->CreateFolder("BestClient/CTrails", IStorage::TYPE_SAVE);
+				Storage()->CreateFolder("RequiemClient/CTrails", IStorage::TYPE_SAVE);
 				char aBuf[IO_MAX_PATH_LENGTH];
-				Storage()->GetCompletePath(IStorage::TYPE_SAVE, "BestClient/CTrails", aBuf, sizeof(aBuf));
+				Storage()->GetCompletePath(IStorage::TYPE_SAVE, "RequiemClient/CTrails", aBuf, sizeof(aBuf));
 				Client()->ViewFile(aBuf);
 			}
 		}

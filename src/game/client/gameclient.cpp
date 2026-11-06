@@ -358,7 +358,7 @@ void CGameClient::InitializeLanguage()
 	g_Localization.Load(aBuf, Storage(), Console(), false);
 
 	// bestclient
-	str_format(aBuf, sizeof(aBuf), "BestClient/%s", g_Config.m_ClLanguagefile);
+	str_format(aBuf, sizeof(aBuf), "RequiemClient/%s", g_Config.m_ClLanguagefile);
 	g_Localization.Load(aBuf, Storage(), Console(), false);
 	// bestclient
 }
@@ -1611,7 +1611,7 @@ void CGameClient::HandleLanguageChanged()
 	g_Localization.Load(aBuf, Storage(), Console(), false);
 
 	// bestclient
-	str_format(aBuf, sizeof(aBuf), "BestClient/%s", g_Config.m_ClLanguagefile);
+	str_format(aBuf, sizeof(aBuf), "RequiemClient/%s", g_Config.m_ClLanguagefile);
 	g_Localization.Load(aBuf, Storage(), Console(), false);
 	// bestclient
 

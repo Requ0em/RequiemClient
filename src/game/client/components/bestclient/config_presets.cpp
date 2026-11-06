@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <utility>
 
-static constexpr const char *CONFIGS_DIR = "BestClient/configs";
+static constexpr const char *CONFIGS_DIR = "RequiemClient/configs";
 
 bool CBcConfigPresets::NameOk(const char *pName)
 {

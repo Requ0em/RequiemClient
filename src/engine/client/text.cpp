@@ -1287,7 +1287,7 @@ public:
 		}
 		// bestclient
 		{
-			const char *pBcFontPath = "BestClient/ActayWide-Bold.otf";
+			const char *pBcFontPath = "RequiemClient/ActayWide-Bold.otf";
 			void *pBcFontData;
 			unsigned BcFontDataSize;
 			if(Storage()->ReadFile(pBcFontPath, IStorage::TYPE_ALL, &pBcFontData, &BcFontDataSize))

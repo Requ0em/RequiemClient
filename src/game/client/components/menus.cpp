@@ -1012,7 +1012,7 @@ void CMenus::OnInit()
 
 	m_TextureBlob = Graphics()->LoadTexture("blob.png", IStorage::TYPE_ALL);
 	// bestclient
-	m_BcLogoTexture = Graphics()->LoadTexture("BestClient/gui_logo.png", IStorage::TYPE_ALL);
+	m_BcLogoTexture = Graphics()->LoadTexture("RequiemClient/gui_logo.png", IStorage::TYPE_ALL);
 	// bestclient
 
 	// setup load amount

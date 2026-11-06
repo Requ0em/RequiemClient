@@ -3264,7 +3264,7 @@ public:
 		if(m_LogoLoadAttempted || pGraphics == nullptr)
 			return;
 		m_LogoLoadAttempted = true;
-		m_LogoTexture = pGraphics->LoadTexture("BestClient/bc_icon.png", IStorage::TYPE_ALL);
+		m_LogoTexture = pGraphics->LoadTexture("RequiemClient/bc_icon.png", IStorage::TYPE_ALL);
 	}
 
 	void ResetLogoTexture(IGraphics *pGraphics)

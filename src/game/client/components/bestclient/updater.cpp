@@ -35,12 +35,12 @@ static bool StrEndsWithNoCase(const char *pStr, const char *pSuffix)
 	return str_comp_nocase(pStr + StrLen - SuffixLen, pSuffix) == 0;
 }
 
-static constexpr const char *GITHUB_RELEASES_URL = "https://api.github.com/repos/BestProjectTeam/BestClient/releases?per_page=10";
-static constexpr const char *GITHUB_LATEST_RELEASE_URL = "https://github.com/BestProjectTeam/BestClient/releases/latest";
+static constexpr const char *GITHUB_RELEASES_URL = "https://api.github.com/repos/Requ0em/RequiemClient/releases?per_page=10";
+static constexpr const char *GITHUB_LATEST_RELEASE_URL = "https://github.com/Requ0em/RequiemClient/releases/latest";
 #if defined(CONF_PLATFORM_LINUX)
-static constexpr const char *UPDATE_ARCHIVE_PATH = "update/bestclient-release.tar.xz";
+static constexpr const char *UPDATE_ARCHIVE_PATH = "update/requiemclient-release.tar.xz";
 #else
-static constexpr const char *UPDATE_ARCHIVE_PATH = "update/bestclient-release.zip";
+static constexpr const char *UPDATE_ARCHIVE_PATH = "update/requiemclient-release.zip";
 #endif
 
 static void BuildGitHubReleasesUrl(char *pBuf, int BufSize)
@@ -147,7 +147,7 @@ static int ScoreArchiveAsset(const char *pAssetName)
 		return -1;
 
 	const std::string Lower = ToLowerAscii(pAssetName);
-	if(Lower.find("bestclient") == std::string::npos)
+	if(Lower.find("requiemclient") == std::string::npos)
 		return -1;
 
 #if defined(CONF_FAMILY_WINDOWS)
@@ -170,12 +170,12 @@ static int ScoreArchiveAsset(const char *pAssetName)
 	int Score = 100;
 
 #if defined(CONF_FAMILY_WINDOWS)
-	if(Lower == "bestclient-windows.zip")
+	if(Lower == "requiemclient-windows.zip")
 		Score += 200;
 	if(Lower.find("x64") != std::string::npos || Lower.find("64") != std::string::npos || Lower.find("amd64") != std::string::npos)
 		Score += 20;
 #elif defined(CONF_PLATFORM_LINUX)
-	if(Lower == "bestclient-linux.tar.xz")
+	if(Lower == "requiemclient-linux.tar.xz")
 		Score += 200;
 #endif
 
@@ -451,9 +451,9 @@ bool CUpdater::LaunchApplyScriptAndQuit()
 	}
 
 #if defined(CONF_FAMILY_WINDOWS)
-	m_pStorage->GetBinaryPathAbsolute("bestclient-updater.exe", aUpdaterPath, sizeof(aUpdaterPath));
+	m_pStorage->GetBinaryPathAbsolute("requiemclient-updater.exe", aUpdaterPath, sizeof(aUpdaterPath));
 #else
-	m_pStorage->GetBinaryPathAbsolute("bestclient-updater", aUpdaterPath, sizeof(aUpdaterPath));
+	m_pStorage->GetBinaryPathAbsolute("requiemclient-updater", aUpdaterPath, sizeof(aUpdaterPath));
 #endif
 	m_pStorage->GetBinaryPathAbsolute(PLAT_CLIENT_EXEC, aExePath, sizeof(aExePath));
 	str_copy(aInstallDir, aExePath, sizeof(aInstallDir));

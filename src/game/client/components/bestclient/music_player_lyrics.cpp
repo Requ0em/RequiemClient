@@ -405,7 +405,7 @@ void CMusicPlayerLyrics::StartRequest(IHttp *pHttp, const char *pTitle, const ch
 	m_pRequest->Timeout(CTimeout{10000, 0, 500, 10});
 	m_pRequest->LogProgress(HTTPLOG::FAILURE);
 	m_pRequest->FailOnErrorStatus(false);
-	m_pRequest->HeaderString("Lrclib-Client", "BestClient/" BESTCLIENT_VERSION " (https://github.com/BestProjectTeam/BestClient)");
+	m_pRequest->HeaderString("Lrclib-Client", "RequiemClient/" BESTCLIENT_VERSION " (https://github.com/Requ0em/RequiemClient)");
 	m_RequestKey = m_ActiveKey;
 	m_DisplayState = EDisplayState::Loading;
 	pHttp->Run(m_pRequest);

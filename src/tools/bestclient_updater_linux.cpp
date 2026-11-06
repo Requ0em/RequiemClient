@@ -317,7 +317,7 @@ int main(int argc, char **argv)
 {
 	if(argc < 5)
 	{
-		fprintf(stderr, "Usage: bestclient-updater <pid> <archive> <install_dir> <exe>\n");
+		fprintf(stderr, "Usage: requiemclient-updater <pid> <archive> <install_dir> <exe>\n");
 		return 1;
 	}
 

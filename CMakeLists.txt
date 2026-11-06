@@ -263,7 +263,7 @@ if(NOT "${CMAKE_CURRENT_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
 endif()
 
 set(SERVER_EXECUTABLE DDNet-Server CACHE STRING "Name of the built server executable")
-set(CLIENT_EXECUTABLE DDNet CACHE STRING "Name of the build client executable")
+set(CLIENT_EXECUTABLE RequiemClient CACHE STRING "Name of the build client executable")
 set(IOS_BUNDLE_IDENTIFIER "org.ddnet.client" CACHE STRING "iOS bundle identifier")
 
 ########################################################################
@@ -1486,16 +1486,16 @@ set(EXPECTED_DATA
   audio/wp_switch-03.wv
   autoexec_server.cfg
   background_noise.png
-  BestClient/bc_dev_icon.png
-  BestClient/bc_fake_icon.png
-  BestClient/bc_fake_requiem_icon.png
-  BestClient/bc_icon.png
-  BestClient/bc_light_icon.png
-  BestClient/bc_requiem_icon.png
-  BestClient/gui_logo.png
-  BestClient/languages/russian.txt
-  BestClient/languages/simplified_chinese.txt
-  BestClient/trollface.png
+  RequiemClient/bc_dev_icon.png
+  RequiemClient/bc_fake_icon.png
+  RequiemClient/bc_fake_requiem_icon.png
+  RequiemClient/bc_icon.png
+  RequiemClient/bc_light_icon.png
+  RequiemClient/bc_requiem_icon.png
+  RequiemClient/gui_logo.png
+  RequiemClient/languages/russian.txt
+  RequiemClient/languages/simplified_chinese.txt
+  RequiemClient/trollface.png
   blob.png
   censorlist.txt
   communityicons/none.png
@@ -3567,27 +3567,27 @@ if(CLIENT)
       configure_file("other/manifest/updater.rc" "updater.rc" COPYONLY)
       set(UPDATER_MANIFEST "${CMAKE_CURRENT_BINARY_DIR}/updater.rc")
     endif()
-    add_executable(bestclient-updater WIN32
+    add_executable(requiemclient-updater WIN32
       src/tools/bestclient_updater.cpp
       other/icons/DDNet.rc
       "${CMAKE_CURRENT_BINARY_DIR}/updater.versioninfo.rc"
       ${UPDATER_MANIFEST}
       ${ZLIB_DEP}
     )
-    target_link_libraries(bestclient-updater shell32 ${ZLIB_LIBRARIES})
-    target_include_directories(bestclient-updater SYSTEM PRIVATE ${ZLIB_INCLUDE_DIRS})
-    set_property(TARGET bestclient-updater PROPERTY OUTPUT_NAME "bestclient-updater")
-    list(APPEND TARGETS_OWN bestclient-updater)
-    list(APPEND TARGETS_LINK bestclient-updater)
+    target_link_libraries(requiemclient-updater shell32 ${ZLIB_LIBRARIES})
+    target_include_directories(requiemclient-updater SYSTEM PRIVATE ${ZLIB_INCLUDE_DIRS})
+    set_property(TARGET requiemclient-updater PROPERTY OUTPUT_NAME "requiemclient-updater")
+    list(APPEND TARGETS_OWN requiemclient-updater)
+    list(APPEND TARGETS_LINK requiemclient-updater)
   elseif(TARGET_OS STREQUAL "linux")
-    add_executable(bestclient-updater
+    add_executable(requiemclient-updater
       src/tools/bestclient_updater_linux.cpp
     )
-    target_link_libraries(bestclient-updater ${SDL2_LIBRARIES})
-    target_include_directories(bestclient-updater PRIVATE ${SDL2_INCLUDE_DIRS})
-    set_property(TARGET bestclient-updater PROPERTY OUTPUT_NAME "bestclient-updater")
-    list(APPEND TARGETS_OWN bestclient-updater)
-    list(APPEND TARGETS_LINK bestclient-updater)
+    target_link_libraries(requiemclient-updater ${SDL2_LIBRARIES})
+    target_include_directories(requiemclient-updater PRIVATE ${SDL2_INCLUDE_DIRS})
+    set_property(TARGET requiemclient-updater PROPERTY OUTPUT_NAME "requiemclient-updater")
+    list(APPEND TARGETS_OWN requiemclient-updater)
+    list(APPEND TARGETS_LINK requiemclient-updater)
   endif()
 endif()
 
@@ -4295,8 +4295,8 @@ set(CPACK_TARGETS)
 if(TARGET game-client)
   list(APPEND CPACK_TARGETS game-client)
 endif()
-if(TARGET bestclient-updater)
-  list(APPEND CPACK_TARGETS bestclient-updater)
+if(TARGET requiemclient-updater)
+  list(APPEND CPACK_TARGETS requiemclient-updater)
 endif()
 if(TARGET game-server)
   list(APPEND CPACK_TARGETS game-server)
@@ -4738,7 +4738,7 @@ foreach(target ${TARGETS_OWN})
     # See https://learn.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers
     target_compile_definitions(${target} PRIVATE NOMINMAX) # windows.h shouldn't define min/max macros
     target_compile_definitions(${target} PRIVATE WIN32_LEAN_AND_MEAN) # windows.h shouldn't define the name IStorage
-    if(NOT "${target}" STREQUAL "bestclient-updater")
+    if(NOT "${target}" STREQUAL "requiemclient-updater")
       target_compile_definitions(${target} PRIVATE NOGDI) # wingdi.h shouldn't define the name ERROR
     endif()
     # 0x0501 (Windows XP) is required for mingw to get getaddrinfo to work

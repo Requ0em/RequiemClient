@@ -660,8 +660,8 @@ float GetKeystrokesKeyboardPresetWidthHudPx(int Preset)
 void CKeystrokes::OnInit()
 {
 	OnReset();
-	m_KeyboardTexture = Graphics()->LoadTexture("BestClient/keystrokes/wasd.png", IStorage::TYPE_ALL);
-	m_MouseTexture = Graphics()->LoadTexture("BestClient/keystrokes/mouse.png", IStorage::TYPE_ALL);
+	m_KeyboardTexture = Graphics()->LoadTexture("RequiemClient/keystrokes/wasd.png", IStorage::TYPE_ALL);
+	m_MouseTexture = Graphics()->LoadTexture("RequiemClient/keystrokes/mouse.png", IStorage::TYPE_ALL);
 	if(m_KeyboardTexture.IsNullTexture())
 		log_warn("keystrokes", "Failed to load keyboard keystrokes texture");
 	if(m_MouseTexture.IsNullTexture())

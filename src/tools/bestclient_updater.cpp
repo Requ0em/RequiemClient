@@ -878,7 +878,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int)
 	if(Argc < 5 || !ppArgv)
 	{
 		MessageBoxW(NULL,
-			L"Usage: bestclient-updater.exe <pid> <archive> <install_dir> <exe>",
+			L"Usage: requiemclient-updater.exe <pid> <archive> <install_dir> <exe>",
 			L"BestClient Updater", MB_ICONERROR);
 		return 1;
 	}
